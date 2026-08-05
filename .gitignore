@@ -1,0 +1,38 @@
+# Dependencies and package-manager state
+node_modules/
+.pnpm-store/
+
+# Next.js build output
+.next/
+out/
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Vercel deployment metadata
+.vercel/
+
+# Logs and debug artifacts
+*.log
+logs/
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test and coverage output
+coverage/
+playwright-report/
+test-results/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

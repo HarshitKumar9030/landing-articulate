@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* @theme { --font-sans: "DM Sans", sans-serif; --font-mono: "DM Mono --font-brand: "Manrope", sans-serif; } */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+  }
+}
+@layer utilities {
+  .site {
+    --bg: #f7f8fc;
+    --surface: #fff;
+    --ink: #111525;
+    --muted: #697084;
+    --line: #e4e7ef;
+    --primary: #2955d9;
+    --violet: #7253e7;
+    --tint: #f0f3ff;
+    --deep-bg: #111525;
+    --deep-ink: #f7f8fc;
+    --deep-dot: rgba(247, 248, 252, 0.3);
+  }
+  .site.dark {
+    --bg: #0b0f1b;
+    --surface: #121828;
+    --ink: #f4f6ff;
+    --muted: #aab3c7;
+    --line: #273044;
+    --primary: #7ca0ff;
+    --violet: #aa8cff;
+    --tint: #181f36;
+    --deep-bg: #111525;
+    --deep-ink: #f7f8fc;
+    --deep-dot: rgba(247, 248, 252, 0.3);
+  }
+  .portrait-image {
+    background-image:
+      linear-gradient(0deg, rgba(17, 21, 37, 0.18), rgba(17, 21, 37, 0.05)),
+      url("https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1300&q=85");
+  }
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .animate-ticker {
+    animation: ticker 26s linear infinite;
+  }
+  .animate-shimmer {
+    animation: shimmer 0.65s ease;
+  }
+}
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes shimmer {
+  from {
+    transform: translateX(-130%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}

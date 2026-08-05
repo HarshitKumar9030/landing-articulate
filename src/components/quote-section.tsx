@@ -1,0 +1,10 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Play } from "lucide-react";
+import { APP_CONTENT } from "@/constants";
+import { Reveal } from "./reveal";
+
+export function QuoteSection() {
+  return <section className="relative flex min-h-[80svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(24px,5vw,80px)] py-32 text-center md:py-48"><div className="pointer-events-none absolute -left-[10%] top-0 -z-10 h-[70vw] w-[70vw] max-w-[800px] rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_2%,transparent)_0%,transparent_50%)] blur-3xl" /><div className="pointer-events-none absolute -right-[10%] bottom-0 -z-10 h-[50vw] w-[50vw] max-w-[600px] rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_3%,transparent)_0%,transparent_50%)] blur-3xl" /><Reveal><div className="flex max-w-[1000px] flex-col items-center"><h2 className="m-0 font-sans text-[clamp(48px,8vw,120px)] font-medium leading-[0.9] tracking-tighter text-[var(--ink)]">{APP_CONTENT.quote.lead}<br /><span className="text-[color:color-mix(in_srgb,var(--ink)_30%,transparent)]">{APP_CONTENT.quote.accent}</span></h2><p className="mt-12 font-mono text-[12px] font-medium uppercase tracking-[0.2em] text-[var(--muted)] md:mt-16">{APP_CONTENT.quote.attribution}</p></div></Reveal><Reveal><motion.button className="group mt-16 flex cursor-pointer items-center gap-4 rounded-full p-2 pr-6 transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_2%,transparent)] md:mt-20" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}><div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] text-[var(--ink)] transition-colors group-hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)]"><Play className="ml-1 h-5 w-5 opacity-80" fill="currentColor" strokeWidth={0} /></div><span className="font-sans text-[14px] font-medium tracking-tight text-[var(--ink)]">{APP_CONTENT.quote.cta}</span></motion.button></Reveal></section>;
+}
