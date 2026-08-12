@@ -26,7 +26,7 @@ function rateLimited(ip: string) {
 export async function POST(request: NextRequest) {
   try {
     const origin = request.headers.get("origin");
-    const allowedOrigins = (process.env.ALLOWED_CONTACT_ORIGINS ?? "https://articulatex.tech,https://articulatex.in").split(",").map((value) => value.trim()).filter(Boolean);
+    const allowedOrigins = (process.env.ALLOWED_CONTACT_ORIGINS ?? "https://articulatex.tech,https://www.articulatex.tech,https://articulatex.in,https://www.articulatex.in").split(",").map((value) => value.trim()).filter(Boolean);
     if (process.env.NODE_ENV === "production" && origin && !allowedOrigins.includes(origin)) return NextResponse.json({ error: "Invalid request origin." }, { status: 403 });
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     if (rateLimited(ip)) return NextResponse.json({ error: "Please wait a few minutes before trying again." }, { status: 429 });
