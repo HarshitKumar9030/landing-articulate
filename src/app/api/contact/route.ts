@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 
+type ContactSubmission = { interest: string; message: string; receivedAt: Date; channel: "website" };
+type WebsiteLead = {
+  name: string; email: string; company: string; title: string; source: string; stage: string; tags: string[]; notes: string; createdAt: Date;
+  updatedAt?: Date; lastContactAt?: Date; lastInterest?: string; lastInquiry?: string; contactSubmissions?: ContactSubmission[];
+};
+
 const submissionSchema = z.object({
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().toLowerCase().email().max(254),
@@ -26,8 +32,8 @@ export async function POST(request: NextRequest) {
     if (rateLimited(ip)) return NextResponse.json({ error: "Please wait a few minutes before trying again." }, { status: 429 });
     const input = submissionSchema.parse(await request.json());
     const db = await getDb(); const now = new Date();
-    const submission = { interest: input.interest, message: input.message, receivedAt: now, channel: "website" };
-    await db.collection("leads").updateOne(
+    const submission: ContactSubmission = { interest: input.interest, message: input.message, receivedAt: now, channel: "website" };
+    await db.collection<WebsiteLead>("leads").updateOne(
       { email: input.email },
       { $setOnInsert: { name: input.name, email: input.email, company: "", title: "", source: "Website", stage: "new", tags: ["website"], notes: input.message, createdAt: now }, $set: { updatedAt: now, lastContactAt: now, lastInterest: input.interest, lastInquiry: input.message }, $push: { contactSubmissions: { $each: [submission], $slice: -20 } } },
       { upsert: true },
