@@ -13,8 +13,7 @@ type HeroProps = {
 export function Hero({ orbit }: HeroProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  // Lock the main body scroll when the cinematic modal is open, 
-  // allowing only the modal's internal scroll for the Macbook effect.
+  // Lock the main body scroll when the cinematic modal is open
   useEffect(() => {
     if (isVideoOpen) {
       document.body.style.overflow = "hidden";
@@ -30,42 +29,42 @@ export function Hero({ orbit }: HeroProps) {
     <>
       <section
         id="top"
-        className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(24px,5vw,80px)] pb-12 pt-32 text-center"
+        className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-24 text-center md:pb-12 md:pt-32"
       >
         {/* Background glow to prevent emptiness */}
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[60vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_3%,transparent)_0%,transparent_70%)] blur-3xl" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_4%,transparent)_0%,transparent_70%)] blur-3xl md:w-[60vw]" />
 
-        {/* Floating Doodle 1: Abstract loop (Top Left) - Now responsive */}
+        {/* Floating Doodle 1: Abstract loop (Top Left) */}
         <motion.div
           initial={{ opacity: 0, rotate: -20, scale: 0.8 }}
           animate={{ opacity: 1, rotate: 0, scale: 1 }}
           transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
           style={{ rotate: orbit }}
-          className="absolute left-[-5%] top-[12%] w-16 text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] sm:left-[2%] md:left-[10%] lg:left-[15%] lg:top-[25%] lg:w-20"
+          className="absolute left-[-2%] top-[10%] w-12 text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] sm:left-[2%] md:left-[10%] sm:w-16 lg:left-[15%] lg:top-[25%] lg:w-20"
         >
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <path d="M20 80 C 20 20, 80 20, 80 80 C 80 120, 20 60, 40 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </motion.div>
 
-        {/* Floating Doodle 2: Speech Bubble (Mid Left) - Now responsive */}
+        {/* Floating Doodle 2: Speech Bubble (Mid Left) */}
         <motion.div
           initial={{ opacity: 0, x: -30, scale: 0.8 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
-          className="absolute left-[-10%] top-[65%] w-24 text-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] sm:left-[-2%] md:left-[2%] lg:left-[5%] lg:top-[50%] lg:w-[120px]"
+          className="absolute left-[-5%] top-[75%] w-16 text-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] sm:left-[-2%] md:left-[2%] sm:w-24 lg:left-[5%] lg:top-[50%] lg:w-[120px]"
         >
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <path d="M10 50 C 10 20, 90 20, 90 50 C 90 80, 50 80, 30 90 L 30 75 C 15 70, 10 60, 10 50 Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </motion.div>
 
-        {/* Floating Doodle 3: Aircraft Landing (Right) - Now responsive */}
+        {/* Floating Doodle 3: Aircraft Landing (Right) */}
         <motion.div
           initial={{ opacity: 0, x: 50, y: -60, rotate: -15 }}
           animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
           transition={{ delay: 0.9, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute right-[-8%] top-[25%] w-20 text-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] sm:right-[2%] md:right-[5%] lg:right-[8%] lg:top-[38%] lg:w-[110px]"
+          className="absolute right-[-4%] top-[18%] w-14 text-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] sm:right-[2%] md:right-[5%] sm:w-20 lg:right-[8%] lg:top-[38%] lg:w-[110px]"
         >
           <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className="h-full w-full -rotate-12">
             <path d="M18.752 16.038c-.097.266-.822 1.002-6.029-.878l-5.105-1.843C5.841 12.676 3.34 11.668 2.36 11.1c-.686-.397-.836-1.282-.836-1.282s-.163-2.956-.263-3.684c-.1-.728.095-.853.796-.492.436.225 1.865 2.562 2.464 3.567 1.512.381 2.862.761 3.493.949-.257-1.717-.74-4.928-.913-5.933-.166-.963.55-.535.55-.535.331.19.983.661 1.206 1.002 1.522 2.326 3.672 6.6 3.836 6.928.896.28 2.277.733 3.102 1.03 2.156.779 3.087 3.034 2.957 3.388z" />
@@ -77,7 +76,7 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-8 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[13px] font-medium tracking-tight text-[var(--ink)] ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)]"
+          className="mb-6 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-8 md:text-[13px]"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--ink)] opacity-40"></span>
@@ -89,7 +88,7 @@ export function Hero({ orbit }: HeroProps) {
         {/* Main Headline */}
         <div className="relative z-10 flex max-w-[900px] flex-col items-center">
           <motion.p
-            className="mb-4 font-sans text-lg font-medium tracking-tight text-[var(--muted)] md:text-xl"
+            className="mb-3 font-sans text-[15px] font-medium tracking-tight text-[var(--muted)] sm:text-lg md:mb-4 md:text-xl"
             initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ delay: 0.1, duration: 0.8 }}
@@ -98,7 +97,7 @@ export function Hero({ orbit }: HeroProps) {
           </motion.p>
 
           <motion.h1
-            className="relative m-0 font-sans text-[clamp(56px,10vw,140px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
+            className="relative m-0 font-sans text-[clamp(40px,11vw,140px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -108,7 +107,7 @@ export function Hero({ orbit }: HeroProps) {
               land.
               {/* Doodle 4: Hand-drawn Underline */}
               <svg
-                className="absolute -bottom-2 left-0 w-full text-[var(--ink)] opacity-30"
+                className="absolute -bottom-1 left-0 w-full text-[var(--ink)] opacity-30 md:-bottom-2"
                 viewBox="0 0 200 15"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +130,7 @@ export function Hero({ orbit }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="mt-8 max-w-[500px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:text-[17px]"
+            className="mt-6 max-w-[500px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:mt-8 md:text-[17px]"
           >
             ArticulateX is a professional speaking studio tailored for leaders with something meaningful to say.
           </motion.p>
@@ -142,7 +141,7 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="mt-10 flex w-full flex-col items-center justify-center gap-4 sm:flex-row"
+          className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-10 md:gap-4"
         >
           <a
             href="#about"
@@ -172,28 +171,23 @@ export function Hero({ orbit }: HeroProps) {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[100] h-[100svh] w-full overflow-y-auto overflow-x-hidden bg-[color:color-mix(in_srgb,var(--bg)_95%,transparent)] backdrop-blur-3xl backdrop-saturate-150"
           >
-            {/* Sticky Close Button */}
+            {/* Sticky Close Button - Optimized for mobile touch target */}
             <button
               onClick={() => setIsVideoOpen(false)}
-              className="fixed right-6 top-6 z-[110] flex h-12 w-12 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_5%,transparent)] text-[var(--ink)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] md:right-10 md:top-10"
+              className="fixed right-4 top-4 z-[110] flex h-12 w-12 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] text-[var(--ink)] backdrop-blur-md transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] md:right-10 md:top-10"
             >
               <X size={20} strokeWidth={2} />
             </button>
 
             {/* The Macbook Scroll Component */}
-            <div className="relative flex w-full flex-col items-center justify-center pb-32 pt-20">
+            <div className="relative flex w-full flex-col items-center justify-center pb-24 pt-16 md:pb-32 md:pt-20">
               <MacbookScroll
                 title={
-                  <span className="font-sans text-[clamp(24px,4vw,36px)] font-medium tracking-tight text-[var(--ink)]">
-                    Scroll down to unpack <br /> the method.
+                  <span className="font-sans text-[clamp(20px,4vw,36px)] font-medium tracking-tight text-[var(--ink)]">
+                    Scroll down to unpack <br className="hidden sm:block" /> the method.
                   </span>
                 }
-                badge={
-                  <a href="https://peerlist.io/manuarora">
-                    <Badge className="h-10 w-10 -rotate-12 transform" />
-                  </a>
-                }
-                src={`/linear.webp`}
+                src={`https://ixl4i8iv3r.ufs.sh/f/GKvLvib9Pvzivad34YOmtnSov1OQC95WM4PUyHfDq3LslxYJ`}
                 showGradient={false}
               />
             </div>

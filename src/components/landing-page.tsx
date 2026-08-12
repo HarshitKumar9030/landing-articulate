@@ -17,6 +17,7 @@ import { FocusAreas } from "./focus-areas";
 import { MethodSection } from "./method-section";
 import { ConversationCta } from "./conversation-cta";
 import { PaletteStudio } from "./palette-studio";
+import { AboutUs } from "./about-us";
 import { createRandomPalette, PALETTES, type Palette, type PaletteTokens } from "@/constants";
 import { track } from "@vercel/analytics";
 
@@ -138,6 +139,7 @@ export function LandingPage() {
       <Ticker />
       <FocusAreas onContactOpen={openContact} />
       <Manifesto />
+      <AboutUs />
       <MethodSection />
       <Programs onContactOpen={openContact} />
       <QuoteSection />

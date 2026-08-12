@@ -42,7 +42,7 @@ export function MethodSection() {
       <div className="relative z-10 mx-auto grid max-w-7xl items-start gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
         
         {/* Left Column: Context (Sticky) */}
-        <div className="sticky top-32 flex flex-col items-start lg:pb-24">
+        <div className="flex flex-col items-start lg:sticky lg:top-32 lg:pb-24">
           <Reveal>
             <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[13px] font-medium tracking-tight text-[var(--ink)] ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)]">
               The practice loop
@@ -62,7 +62,7 @@ export function MethodSection() {
         </div>
 
         {/* Right Column: Interactive Accordion Cards */}
-        <div className="flex flex-col gap-4 pt-4 lg:pt-0">
+        <div className="flex flex-col gap-4 lg:pt-0">
           {steps.map((step, index) => (
             <StepCard
               key={step.number}

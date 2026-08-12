@@ -8,6 +8,8 @@ type ContactDialogProps = { open: boolean; onClose: () => void };
 
 export function ContactDialog({ open, onClose }: ContactDialogProps) {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!open) return;
@@ -18,6 +20,7 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
 
   const close = () => {
     setSent(false);
+    setError("");
     onClose();
   };
 
@@ -136,7 +139,7 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
                 </motion.div>
               ) : (
                 <form 
-                  onSubmit={(event) => { event.preventDefault(); setSent(true); }}
+                  onSubmit={async (event) => { event.preventDefault(); setSending(true); setError(""); const form = new FormData(event.currentTarget); try { const response = await fetch("/api/contact", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: form.get("name"), email: form.get("email"), interest: form.get("interest"), message: form.get("message") }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || "Unable to send your inquiry."); setSent(true); } catch (submissionError) { setError(submissionError instanceof Error ? submissionError.message : "Unable to send your inquiry."); } finally { setSending(false); } }}
                   className="flex h-full flex-col"
                 >
                   <h3 className="font-sans text-[28px] font-medium tracking-tight text-[var(--ink)] md:text-[36px]">
@@ -203,11 +206,13 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
                     </label>
                   </div>
                   
+                  {error && <p className="mt-5 text-sm text-red-500">{error}</p>}
                   <button 
                     type="submit" 
+                    disabled={sending}
                     className="group mt-12 inline-flex h-14 w-full items-center justify-center gap-3 rounded-full bg-[var(--ink)] px-8 font-sans text-[14px] font-medium text-[var(--bg)] transition-transform hover:scale-[1.02] active:scale-[0.98] sm:w-fit"
                   >
-                    Send inquiry 
+                    {sending ? "Sending…" : "Send inquiry"}
                     <Send size={15} strokeWidth={2} className="opacity-80 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100" />
                   </button>
                 </form>
