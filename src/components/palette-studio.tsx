@@ -1,10 +1,51 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Dices, Palette, SlidersHorizontal, X } from "lucide-react";
+import { useState, useRef, type ReactNode, type MouseEvent as ReactMouseEvent } from "react";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { Dices, Palette, X } from "lucide-react";
 import { PALETTES, type Palette as PaletteType, type PaletteTokens } from "@/constants";
 
+// ----------------------------------------------------------------------
+// Micro-interaction: Magnetic Physics Wrapper
+// ----------------------------------------------------------------------
+function Magnetic({ children, strength = 20 }: { children: ReactNode; strength?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  
+  const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
+
+  const handleMouseMove = (e: ReactMouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) * (strength / 100));
+    y.set((e.clientY - centerY) * (strength / 100));
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className="flex items-center justify-center"
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ----------------------------------------------------------------------
+// Main Component
+// ----------------------------------------------------------------------
 type PaletteStudioProps = {
   activePalette: PaletteType;
   tokens: PaletteTokens;
@@ -28,120 +69,215 @@ export function PaletteStudio({
   onRandomize 
 }: PaletteStudioProps) {
   const [open, setOpen] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  // --- NATIVE VIEW TRANSITION: Expanding Ripple Effect ---
+  const handleThemeSwitch = (e: ReactMouseEvent<HTMLButtonElement>, callback: () => void) => {
+    if (!document.startViewTransition) {
+      callback();
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      callback();
+    });
+
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ]
+        },
+        {
+          duration: 700,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          pseudoElement: "::view-transition-new(root)"
+        }
+      );
+    });
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const, staggerChildren: 0.05, delayChildren: 0.1 },
+    },
+    exit: {
+      opacity: 0,
+      y: 15,
+      scale: 0.96,
+      transition: { duration: 0.3, ease: "easeOut" as const },
+    },
+  } as const;
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+  } as const;
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 sm:bottom-8 sm:left-8">
-      <AnimatePresence>
-        {open && (
-          <motion.section 
-            className="absolute bottom-20 left-0 w-[min(340px,calc(100vw-48px))] overflow-hidden rounded-[2rem] bg-[color:color-mix(in_srgb,var(--bg)_85%,transparent)] p-6 backdrop-blur-3xl backdrop-saturate-150 ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] shadow-[0_40px_80px_color-mix(in_srgb,var(--ink)_10%,transparent)]" 
-            initial={{ opacity: 0, y: 20, scale: 0.95 }} 
-            animate={{ opacity: 1, y: 0, scale: 1 }} 
-            exit={{ opacity: 0, y: 15, scale: 0.95 }} 
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="mb-2 inline-flex items-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-3 py-1 font-sans text-[11px] font-medium tracking-tight text-[var(--ink)]">
-                  Palette Studio
+    <>
+      <style>{`
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+          mix-blend-mode: normal;
+        }
+        ::view-transition-old(root) { z-index: 1; }
+        ::view-transition-new(root) { z-index: 2; }
+      `}</style>
+
+      <div className="fixed bottom-6 left-6 z-50 sm:bottom-8 sm:left-8">
+        
+        {/* The Open Modal */}
+        <AnimatePresence>
+          {open && (
+            <motion.section 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="absolute bottom-20 left-0 w-[min(340px,calc(100vw-48px))] overflow-hidden rounded-[2rem] bg-[var(--ink)] p-6 text-[var(--bg)]" 
+            >
+              <motion.div variants={itemVariants} className="mb-6 flex items-start justify-between">
+                <div>
+                  <h2 className="font-sans text-[28px] font-semibold leading-none tracking-tight text-[var(--bg)]">
+                    Studio.
+                  </h2>
+                  <div className="mt-2 font-sans text-[14px] font-medium text-[color:color-mix(in_srgb,var(--bg)_60%,transparent)]">
+                    Select your theme
+                  </div>
                 </div>
-                <h2 className="font-sans text-[22px] font-medium tracking-tight text-[var(--ink)]">
-                  Make it yours.
-                </h2>
+                
+                <Magnetic strength={15}>
+                  <button 
+                    onClick={() => setOpen(false)} 
+                    aria-label="Close palette studio" 
+                    className="grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-[color:color-mix(in_srgb,var(--bg)_8%,transparent)] text-[var(--bg)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--bg)_15%,transparent)] active:scale-90"
+                  >
+                    <X size={16} strokeWidth={2} />
+                  </button>
+                </Magnetic>
+              </motion.div>
+
+              <motion.div variants={itemVariants} className="grid grid-cols-1 gap-2">
+                {PALETTES.map((palette) => {
+                  const isActive = activePalette.id === palette.id;
+                  return (
+                    <button 
+                      key={palette.id} 
+                      onClick={(e) => handleThemeSwitch(e, () => onPaletteChange(palette))} 
+                      className={`group flex w-full items-center justify-between rounded-2xl p-3 transition-all duration-300 ${
+                        isActive 
+                          ? "bg-[var(--bg)] text-[var(--ink)]" 
+                          : "bg-[color:color-mix(in_srgb,var(--bg)_4%,transparent)] text-[var(--bg)] hover:bg-[color:color-mix(in_srgb,var(--bg)_8%,transparent)]"
+                      }`}
+                    >
+                      <span className="font-sans text-[14px] font-medium tracking-tight transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1">
+                        {palette.name}
+                      </span>
+                      <span className="flex -space-x-1">
+                        {[palette.light["--bg"], palette.light["--ink"], palette.light["--primary"]].map((color, idx) => (
+                          <i 
+                            key={idx} 
+                            className="relative z-10 h-5 w-5 rounded-full ring-2 ring-[var(--ink)] transition-transform duration-300 group-hover:scale-110" 
+                            style={{ 
+                              backgroundColor: color,
+                              zIndex: 3 - idx,
+                              transitionDelay: `${idx * 50}ms` 
+                            }} 
+                          />
+                        ))}
+                      </span>
+                    </button>
+                  );
+                })}
+              </motion.div>
+
+              <motion.div variants={itemVariants} className="mt-8">
+                <div className="mb-4 font-sans text-[14px] font-medium text-[color:color-mix(in_srgb,var(--bg)_60%,transparent)]">
+                  Custom tokens
+                </div>
+                
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                  {editableTokens.map(({ token, label }) => (
+                    <label key={token} className="group flex cursor-pointer items-center justify-between gap-2 font-sans text-[13px] font-medium text-[var(--bg)]">
+                      <span className="transition-opacity group-hover:opacity-70">{label}</span>
+                      <div className="relative h-6 w-10 overflow-hidden rounded-full bg-[color:color-mix(in_srgb,var(--bg)_15%,transparent)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-125 group-active:scale-95">
+                        <input 
+                          aria-label={`${label} color`} 
+                          type="color" 
+                          value={tokens[token]} 
+                          onChange={(event) => onTokenChange(token, event.target.value)} 
+                          className="absolute -inset-4 h-14 w-20 cursor-pointer border-0 bg-transparent p-0 outline-none" 
+                        />
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.button 
+                variants={itemVariants}
+                onClick={(e) => handleThemeSwitch(e, onRandomize)} 
+                className="group mt-8 flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-full bg-[var(--bg)] font-sans text-[14px] font-medium text-[var(--ink)] transition-transform duration-300 active:scale-[0.98]"
+              >
+                <Dices size={16} strokeWidth={2} className="transition-transform duration-500 group-hover:rotate-180" /> 
+                Randomize
+              </motion.button>
+            </motion.section>
+          )}
+        </AnimatePresence>
+
+        {/* Expanding Hover Dock Trigger */}
+        {!dismissed && !open && (
+          <motion.div 
+            className="group flex items-center gap-2"
+            initial={{ opacity: 0, y: 20, scale: 0.9 }} 
+            animate={{ opacity: 1, y: 0, scale: 1 }} 
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <button 
+              onClick={() => setOpen((prev) => !prev)} 
+              className="flex h-14 cursor-pointer items-center justify-center rounded-full bg-[var(--ink)] p-2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.96]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--bg)] text-[var(--ink)] transition-transform duration-500 group-hover:rotate-12">
+                <Palette size={18} strokeWidth={1.5} />
               </div>
               
+              {/* Expanding Label Container */}
+              <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[70px]">
+                <span className="truncate whitespace-nowrap pl-3 pr-2 font-sans text-[14px] font-medium tracking-tight text-[var(--bg)]">
+                  Studio
+                </span>
+              </div>
+            </button>
+
+            {/* Hidden Dismiss Button that slides out on hover */}
+            <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-10">
               <button 
-                onClick={() => setOpen(false)} 
-                aria-label="Close palette studio" 
-                className="grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] text-[var(--ink)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)]"
+                onClick={(e) => { e.stopPropagation(); setDismissed(true); }}
+                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] text-[var(--ink)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]"
+                aria-label="Dismiss dock"
               >
-                <X size={16} strokeWidth={1.5} />
+                <X size={16} strokeWidth={2} />
               </button>
             </div>
-
-            {/* Presets Grid */}
-            <div className="mt-8 grid grid-cols-2 gap-3">
-              {PALETTES.map((palette) => {
-                const isActive = activePalette.id === palette.id;
-                return (
-                  <button 
-                    key={palette.id} 
-                    onClick={() => onPaletteChange(palette)} 
-                    className={`flex flex-col rounded-[1.25rem] p-4 text-left transition-all duration-300 ${
-                      isActive 
-                        ? "bg-[var(--ink)] text-[var(--bg)] shadow-md" 
-                        : "bg-[color:color-mix(in_srgb,var(--ink)_3%,transparent)] text-[var(--ink)] hover:bg-[color:color-mix(in_srgb,var(--ink)_6%,transparent)]"
-                    }`}
-                  >
-                    <span className="flex gap-2">
-                      {[palette.light["--bg"], palette.light["--ink"], palette.light["--primary"]].map((color, idx) => (
-                        <i 
-                          key={idx} 
-                          className="h-4 w-4 rounded-full ring-1 ring-inset ring-black/10" 
-                          style={{ backgroundColor: color }} 
-                        />
-                      ))}
-                    </span>
-                    <span className="mt-3 block font-sans text-[13px] font-medium tracking-tight">
-                      {palette.name}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Fine Tune Section */}
-            <div className="mt-8">
-              <div className="mb-4 h-px w-full bg-[color:color-mix(in_srgb,var(--ink)_6%,transparent)]" />
-              <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)]">
-                Fine Tune
-              </p>
-              
-              <div className="grid grid-cols-2 gap-x-6 gap-y-4">
-                {editableTokens.map(({ token, label }) => (
-                  <label key={token} className="flex cursor-pointer items-center justify-between gap-2 font-sans text-[13px] font-medium text-[var(--ink)] transition-opacity hover:opacity-70">
-                    {label}
-                    {/* Hack to hide default browser styling for color inputs while keeping it native */}
-                    <div className="relative h-6 w-10 overflow-hidden rounded-full ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]">
-                      <input 
-                        aria-label={`${label} color`} 
-                        type="color" 
-                        value={tokens[token]} 
-                        onChange={(event) => onTokenChange(token, event.target.value)} 
-                        className="absolute -inset-4 h-14 w-20 cursor-pointer border-0 bg-transparent p-0 outline-none" 
-                      />
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <button 
-              onClick={onRandomize} 
-              className="group mt-8 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] font-sans text-[13px] font-medium text-[var(--ink)] transition-all hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] active:scale-[0.98]"
-            >
-              <Dices size={16} strokeWidth={1.5} className="transition-transform group-hover:rotate-12" /> 
-              Randomize colors
-            </button>
-          </motion.section>
+          </motion.div>
         )}
-      </AnimatePresence>
-
-      {/* Dock Trigger Button */}
-      <button 
-        onClick={() => setOpen((prev) => !prev)} 
-        className="group flex h-14 cursor-pointer items-center gap-3 rounded-full bg-[color:color-mix(in_srgb,var(--bg)_65%,transparent)] p-2 pr-4 backdrop-blur-2xl backdrop-saturate-150 ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[color:color-mix(in_srgb,var(--bg)_85%,transparent)] active:scale-[0.96]"
-      >
-        <span className="grid h-10 w-10 place-items-center rounded-full bg-[var(--ink)] text-[var(--bg)] transition-transform duration-500 group-hover:rotate-12">
-          <Palette size={18} strokeWidth={1.5} />
-        </span>
-        <span className="hidden font-sans text-[14px] font-medium tracking-tight text-[var(--ink)] sm:block">
-          Studio
-        </span>
-        <SlidersHorizontal size={14} strokeWidth={2} className="hidden text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)] transition-colors group-hover:text-[var(--ink)] sm:block" />
-      </button>
-    </div>
+      </div>
+    </>
   );
 }

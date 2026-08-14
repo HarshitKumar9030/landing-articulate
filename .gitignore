@@ -29,6 +29,7 @@ yarn-error.log*
 # Test and coverage output
 coverage/
 playwright-report/
+client-app/
 test-results/
 
 # OS/editor files

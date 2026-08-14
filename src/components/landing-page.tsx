@@ -16,6 +16,7 @@ import { ContactDialog, ContactDock } from "./contact-dialog";
 import { FocusAreas } from "./focus-areas";
 import { MethodSection } from "./method-section";
 import { ConversationCta } from "./conversation-cta";
+import { EntryLoader } from "./entry-loader";
 import { PaletteStudio } from "./palette-studio";
 import { AboutUs } from "./about-us";
 import { createRandomPalette, PALETTES, type Palette, type PaletteTokens } from "@/constants";
@@ -112,11 +113,12 @@ export function LandingPage() {
       className={`
         ${dark ? "dark" : "light"} 
         site relative min-h-screen overflow-x-hidden 
-        bg-[var(--bg)] text-[var(--ink)] 
+        bg-(--bg) text-(--ink) 
         transition-colors duration-700
       `}
       style={activeTokens as CSSProperties}
     >
+      <EntryLoader />
       <div className="noise pointer-events-none fixed inset-0 z-10 opacity-[.025]" />
       
       <motion.div 

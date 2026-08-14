@@ -1,147 +1,262 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { useState, useRef, type MouseEvent as ReactMouseEvent, type ReactNode } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
+import { ArrowUpRight, Globe } from "lucide-react";
+import { IconBrandInstagram, IconBrandLinkedin } from "@tabler/icons-react";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
-    },
-  },
+type TeamMemberData = {
+  name: string;
+  role: string;
+  linkedin: string;
+  instagram: string;
+  story: string;
+  website?: string;
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  show: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } 
+const team: TeamMemberData[] = [
+  {
+    name: "Vineet",
+    role: "Founder",
+    linkedin: "https://www.linkedin.com/",
+    instagram: "https://www.instagram.com/",
+    story: "Vineet built ArticulateX on the premise that great leadership requires equally great articulation. With a background in strategic communication, he strips away corporate noise to help founders turn raw vision into compelling, high-stakes narratives.",
   },
-};
+  {
+    name: "Aniket",
+    role: "Founder",
+    linkedin: "https://www.linkedin.com/",
+    instagram: "https://www.instagram.com/",
+    story: "Aniket operates at the precise intersection of business strategy and human psychology. He engineers messages that do more than just sound good—they are meticulously designed to demand attention, shift perspectives, and drive immediate action.",
+  },
+  {
+    name: "Harshit",
+    role: "Creative Director",
+    linkedin: "https://www.linkedin.com/",
+    instagram: "https://www.instagram.com/",
+    website: "https://www.harshit.page",
+    story: "Harshit shapes the visual and experiential identity of every narrative we build. He ensures that the structural integrity of what is being said is perfectly aligned with the aesthetic reality of what is being seen and felt.",
+  },
+];
 
 export function AboutUs() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  
-  // Tie animations directly to the scroll progress of this specific section
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start 80%", "end 20%"],
-  });
-
-  // The horizontal line will draw itself from 0% to 100% as the user scrolls
-  const lineWidth = useTransform(scrollYProgress, [0.2, 0.6], ["0%", "100%"]);
-  // Subtle parallax on the right column
-  const rightColY = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const [activeMember, setActiveMember] = useState<string | null>(null);
 
   return (
-    <section 
-      id="about-us" 
-      ref={sectionRef}
-      className="relative overflow-hidden bg-[var(--bg)] px-[clamp(20px,5vw,80px)] py-24 md:py-40"
+    <section
+      id="about-us"
+      className="relative overflow-hidden bg-[var(--bg)] px-[clamp(24px,5vw,80px)] py-24 md:py-36"
     >
-      <div className="mx-auto grid max-w-[1400px] items-start gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24">
+      <div className="mx-auto max-w-7xl">
         
-        {/* Left Column - Sticky Editorial Anchor */}
-        <div className="top-32 flex flex-col items-start lg:sticky">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            // Added a subtle interactive hover state to the pill
-            className="mb-8 inline-flex cursor-default items-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[13px] font-medium tracking-tight text-[var(--ink)] transition-all duration-300 hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)]"
+        {/* Editorial Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-24 flex flex-col items-start justify-between gap-8 md:flex-row md:items-end"
+        >
+          <div className="max-w-2xl">
+            <h2 className="text-balance font-sans text-[clamp(40px,7vw,80px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]">
+              The architects of <br />
+              <span className="text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)]">articulation.</span>
+            </h2>
+          </div>
+          <p className="max-w-sm text-balance font-sans text-[16px] leading-relaxed text-[var(--muted)]">
+            A collective of strategists and creatives building a studio where thoughtful ideas become unforgettable communication.
+          </p>
+        </motion.div>
+
+        {/* 
+          Typographic Roster List
+          Replaced the card grid with an editorial, full-width list layout.
+        */}
+        <div className="flex flex-col border-t border-[color:color-mix(in_srgb,var(--ink)_10%,transparent)]">
+          {team.map((member, index) => (
+            <TeamMember 
+              key={member.name} 
+              member={member} 
+              index={index} 
+              isActive={activeMember === member.name}
+              isDimmed={activeMember !== null && activeMember !== member.name}
+              onToggle={() => setActiveMember(activeMember === member.name ? null : member.name)}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ----------------------------------------------------------------------
+// Individual Team Member Row
+// ----------------------------------------------------------------------
+function TeamMember({ 
+  member, 
+  index, 
+  isActive, 
+  isDimmed, 
+  onToggle 
+}: { 
+  member: TeamMemberData; 
+  index: number;
+  isActive: boolean;
+  isDimmed: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <motion.article
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      animate={{ opacity: isDimmed ? 0.3 : 1 }}
+      className="group relative flex flex-col border-b border-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] py-8 transition-opacity duration-500 md:py-12"
+    >
+      {/* 
+        Clickable Header Row 
+        Uses group-hover logic to subtly shift the text right, acting as a hover affordance.
+      */}
+      <div 
+        className="flex cursor-pointer items-start justify-between md:items-center"
+        onClick={onToggle}
+      >
+        <div className="flex flex-col gap-2 md:flex-row md:items-baseline md:gap-12">
+          <motion.h3 
+            layout 
+            className="font-sans text-[clamp(32px,5vw,56px)] font-medium tracking-tight text-[var(--ink)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2"
           >
-            About ArticulateX
-          </motion.div>
+            {member.name}
+          </motion.h3>
           <motion.p 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-[280px] text-balance font-sans text-[16px] leading-relaxed text-[var(--muted)]"
+            layout 
+            className="font-mono text-[12px] font-medium tracking-[0.15em] text-[color:color-mix(in_srgb,var(--ink)_50%,transparent)] uppercase transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-2"
           >
-            A speaking studio for people whose ideas deserve precision, presence, and a room that listens.
+            {member.role}
           </motion.p>
         </div>
 
-        {/* Right Column - Scrolling Content */}
-        <motion.div 
-          style={{ y: rightColY }}
-          className="flex flex-col"
+        {/* Morphing Toggle Button */}
+        <button
+          className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] text-[var(--ink)] transition-colors group-hover:bg-[var(--ink)] group-hover:text-[var(--bg)]"
+          aria-label="Toggle Story"
         >
-          {/* Staggered Headline Reveal */}
-          <motion.h2 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-            className="max-w-4xl text-balance font-sans text-[clamp(36px,6vw,72px)] font-medium leading-[0.95] tracking-tighter text-[var(--ink)]"
+          <motion.div
+            animate={{ rotate: isActive ? 135 : 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="flex items-center justify-center"
           >
-            <motion.span variants={itemVariants} className="block">
-              We turn considered thinking
-            </motion.span>
-            <motion.span variants={itemVariants} className="block">
-              into communication people
-            </motion.span>
-            <motion.span variants={itemVariants} className="block text-[color:color-mix(in_srgb,var(--ink)_35%,transparent)]">
-              can carry with them.
-            </motion.span>
-          </motion.h2>
-
-          <div className="relative mt-16 pt-12 sm:mt-24 sm:pt-16">
-            
-            {/* Scroll-Linked Soft Divider */}
-            <motion.div 
-              style={{ width: lineWidth }}
-              className="absolute left-0 top-0 h-px bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)]" 
-            />
-            
-            {/* The group/grid wrapper allows us to fade out non-hovered items */}
-            <div className="group/grid grid gap-10 sm:grid-cols-3 sm:gap-8">
-              {[
-                ["Listen", "The real message starts beneath the first draft."], 
-                ["Shape", "We make structure serve attention and trust."], 
-                ["Rehearse", "So the final delivery still sounds like you."]
-              ].map(([title, copy], index) => (
-                <motion.div 
-                  key={title} 
-                  initial={{ opacity: 0, y: 20 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  viewport={{ once: true, margin: "-50px" }} 
-                  transition={{ delay: 0.2 + (index * 0.15), duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  // Focus-pull hover mechanics
-                  className="group/item relative flex flex-col pl-4 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:translate-x-2 sm:pl-5 sm:hover:!opacity-100 sm:group-hover/grid:opacity-40"
-                >
-                  {/* Animated Vertical Stroke - Draws down on hover */}
-                  <div className="absolute left-0 top-1.5 h-0 w-[1.5px] bg-[var(--ink)] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/item:h-[calc(100%-12px)]" />
-
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-sans text-[18px] font-medium tracking-tight text-[var(--ink)] transition-colors duration-500">
-                      {title}
-                    </h3>
-                    {/* Hidden Arrow - Glides in on hover */}
-                    <ArrowRight 
-                      size={16} 
-                      strokeWidth={2}
-                      className="text-[var(--ink)] opacity-0 -translate-x-3 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/item:translate-x-0 group-hover/item:opacity-100" 
-                    />
-                  </div>
-                  
-                  <p className="mt-3 max-w-[220px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] transition-colors duration-500 group-hover/item:text-[var(--ink)]">
-                    {copy}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-        
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M7 1V13M1 7H13" />
+            </svg>
+          </motion.div>
+        </button>
       </div>
-    </section>
+
+      {/* Expandable Story Section */}
+      <AnimatePresence mode="wait">
+        {isActive && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-8 pt-8 md:flex-row md:items-start md:justify-between md:pt-12">
+              <motion.p 
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1, duration: 0.5, ease: "easeOut" }}
+                className="max-w-[500px] text-balance font-sans text-[16px] leading-relaxed text-[var(--muted)]"
+              >
+                {member.story}
+              </motion.p>
+
+              {/* Magnetic Social Links - Pushed to the right on desktop */}
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ delay: 0.2 }}
+                className="flex flex-wrap gap-2 md:justify-end"
+              >
+                <MagneticButton href={member.linkedin} ariaLabel={`${member.name}'s LinkedIn`}>
+                  <IconBrandLinkedin className="h-4 w-4" strokeWidth={1.5} />
+                </MagneticButton>
+
+                <MagneticButton href={member.instagram} ariaLabel={`${member.name}'s Instagram`}>
+                  <IconBrandInstagram className="h-4 w-4" strokeWidth={1.5} />
+                </MagneticButton>
+
+                {member.website && (
+                  <MagneticButton href={member.website} ariaLabel={`${member.name}'s Website`} isWide>
+                    <Globe className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    <span className="px-1 text-[13px]">harshit.page</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={1.5} />
+                  </MagneticButton>
+                )}
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.article>
+  );
+}
+
+// ----------------------------------------------------------------------
+// Micro-interaction: Magnetic Button Wrapper
+// ----------------------------------------------------------------------
+function MagneticButton({ 
+  children, 
+  href, 
+  ariaLabel, 
+  isWide = false 
+}: { 
+  children: ReactNode; 
+  href: string; 
+  ariaLabel: string;
+  isWide?: boolean;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  
+  const springX = useSpring(x, { stiffness: 150, damping: 15, mass: 0.5 });
+  const springY = useSpring(y, { stiffness: 150, damping: 15, mass: 0.5 });
+
+  const handleMouseMove = (e: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const pullStrength = 0.3;
+    x.set((e.clientX - centerX) * pullStrength);
+    y.set((e.clientY - centerY) * pullStrength);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={ariaLabel}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className={`inline-flex items-center justify-center gap-1 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] text-[var(--ink)] transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)] ${
+        isWide ? "h-12 px-5 font-sans font-medium" : "h-12 w-12"
+      }`}
+    >
+      {children}
+    </motion.a>
   );
 }

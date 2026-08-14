@@ -108,3 +108,6 @@ export function createRandomPalette(): Palette {
     dark: { "--bg": color(8, .28, .1), "--surface": color(8, .27, .15), "--ink": color(0, .28, .96), "--muted": color(0, .16, .69), "--line": color(0, .22, .25), "--primary": color(0, .72, .68), "--violet": accent(0, .68, .73), "--tint": color(0, .25, .2), "--deep-bg": color(8, .38, .115), "--deep-ink": color(0, .32, .975), "--deep-dot": color(0, .24, .58) },
   };
 }
+
+
+export const CTA_EYEBROW = "A good place to start";

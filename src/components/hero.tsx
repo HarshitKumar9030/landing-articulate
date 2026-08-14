@@ -31,8 +31,50 @@ export function Hero({ orbit }: HeroProps) {
         id="top"
         className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-24 text-center md:pb-12 md:pt-32"
       >
-        {/* Background glow to prevent emptiness */}
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_4%,transparent)_0%,transparent_70%)] blur-3xl md:w-[60vw]" />
+        {/* Background glow - Immersive breathing/pulsing animation */}
+        <motion.div
+          animate={{
+            scale: [1, 1.05, 1],
+            opacity: [0.7, 1, 0.7],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_4%,transparent)_0%,transparent_70%)] blur-3xl md:w-[60vw]"
+        />
+
+        {/* Clean, opaque architectural lines sweeping across the viewport without shadows/nodes */}
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          {/* Horizontal Line 1 */}
+          <motion.div
+            animate={{ y: ["-10vh", "110vh"] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute left-0 right-0 h-[1px] bg-[linear-gradient(to_right,transparent,color-mix(in_srgb,var(--ink)_40%,transparent)_50%,transparent)]"
+          />
+
+          {/* Horizontal Line 2 (Moving upward slowly) */}
+          <motion.div
+            animate={{ y: ["110vh", "-10vh"] }}
+            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+            className="absolute left-0 right-0 h-[1px] bg-[linear-gradient(to_right,transparent,color-mix(in_srgb,var(--ink)_30%,transparent)_70%,transparent)]"
+          />
+
+          {/* Vertical Line 1 */}
+          <motion.div
+            animate={{ x: ["-10vw", "110vw"] }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-0 top-0 w-[1px] bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--ink)_40%,transparent)_50%,transparent)]"
+          />
+
+          {/* Vertical Line 2 (Moving left slowly) */}
+          <motion.div
+            animate={{ x: ["110vw", "-10vw"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-0 top-0 w-[1px] bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--ink)_30%,transparent)_60%,transparent)]"
+          />
+        </div>
 
         {/* Floating Doodle 1: Abstract loop (Top Left) */}
         <motion.div
@@ -40,7 +82,21 @@ export function Hero({ orbit }: HeroProps) {
           animate={{ opacity: 1, rotate: 0, scale: 1 }}
           transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
           style={{ rotate: orbit }}
-          className="absolute left-[-2%] top-[10%] w-12 text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] sm:left-[2%] md:left-[10%] sm:w-16 lg:left-[15%] lg:top-[25%] lg:w-20"
+          drag
+          dragConstraints={{ left: -40, right: 40, top: -40, bottom: 40 }}
+          dragElastic={0.4}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+          whileHover={{ 
+            scale: 1.1, 
+            cursor: "grab", 
+            filter: "drop-shadow(0px 8px 16px color-mix(in_srgb, var(--ink) 15%, transparent))" 
+          }}
+          whileDrag={{ 
+            scale: 1.2, 
+            cursor: "grabbing", 
+            filter: "drop-shadow(0px 16px 24px color-mix(in_srgb, var(--ink) 25%, transparent))" 
+          }}
+          className="absolute left-[-2%] top-[10%] z-20 w-12 text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] sm:left-[2%] md:left-[10%] sm:w-16 lg:left-[15%] lg:top-[25%] lg:w-20"
         >
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <path d="M20 80 C 20 20, 80 20, 80 80 C 80 120, 20 60, 40 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -52,7 +108,21 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, x: -30, scale: 0.8 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
-          className="absolute left-[-5%] top-[75%] w-16 text-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] sm:left-[-2%] md:left-[2%] sm:w-24 lg:left-[5%] lg:top-[50%] lg:w-[120px]"
+          drag
+          dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
+          dragElastic={0.4}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+          whileHover={{ 
+            scale: 1.1, 
+            cursor: "grab", 
+            filter: "drop-shadow(0px 8px 16px color-mix(in_srgb, var(--ink) 15%, transparent))" 
+          }}
+          whileDrag={{ 
+            scale: 1.2, 
+            cursor: "grabbing", 
+            filter: "drop-shadow(0px 16px 24px color-mix(in_srgb, var(--ink) 25%, transparent))" 
+          }}
+          className="absolute left-[-5%] top-[75%] z-20 w-16 text-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] sm:left-[-2%] md:left-[2%] sm:w-24 lg:left-[5%] lg:top-[50%] lg:w-[120px]"
         >
           <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
             <path d="M10 50 C 10 20, 90 20, 90 50 C 90 80, 50 80, 30 90 L 30 75 C 15 70, 10 60, 10 50 Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -64,7 +134,23 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, x: 50, y: -60, rotate: -15 }}
           animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
           transition={{ delay: 0.9, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute right-[-4%] top-[18%] w-14 text-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] sm:right-[2%] md:right-[5%] sm:w-20 lg:right-[8%] lg:top-[38%] lg:w-[110px]"
+          drag
+          dragConstraints={{ left: -60, right: 60, top: -60, bottom: 60 }}
+          dragElastic={0.4}
+          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
+          whileHover={{ 
+            scale: 1.15, 
+            rotate: -5,
+            cursor: "grab", 
+            filter: "drop-shadow(0px 10px 20px color-mix(in_srgb, var(--ink) 15%, transparent))" 
+          }}
+          whileDrag={{ 
+            scale: 1.25, 
+            rotate: -10,
+            cursor: "grabbing", 
+            filter: "drop-shadow(0px 20px 30px color-mix(in_srgb, var(--ink) 25%, transparent))" 
+          }}
+          className="absolute right-[-4%] top-[18%] z-20 w-14 text-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] sm:right-[2%] md:right-[5%] sm:w-20 lg:right-[8%] lg:top-[38%] lg:w-[110px]"
         >
           <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className="h-full w-full -rotate-12">
             <path d="M18.752 16.038c-.097.266-.822 1.002-6.029-.878l-5.105-1.843C5.841 12.676 3.34 11.668 2.36 11.1c-.686-.397-.836-1.282-.836-1.282s-.163-2.956-.263-3.684c-.1-.728.095-.853.796-.492.436.225 1.865 2.562 2.464 3.567 1.512.381 2.862.761 3.493.949-.257-1.717-.74-4.928-.913-5.933-.166-.963.55-.535.55-.535.331.19.983.661 1.206 1.002 1.522 2.326 3.672 6.6 3.836 6.928.896.28 2.277.733 3.102 1.03 2.156.779 3.087 3.034 2.957 3.388z" />
@@ -76,13 +162,13 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-6 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-8 md:text-[13px]"
+          className="mb-6 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] backdrop-blur-sm ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-8 md:text-[13px]"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--ink)] opacity-40"></span>
             <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--ink)] opacity-80"></span>
           </span>
-          New Delhi · Worldwide
+          Mumbai · Worldwide
         </motion.div>
 
         {/* Main Headline */}
@@ -107,7 +193,7 @@ export function Hero({ orbit }: HeroProps) {
               land.
               {/* Doodle 4: Hand-drawn Underline */}
               <svg
-                className="absolute -bottom-1 left-0 w-full text-[var(--ink)] opacity-30 md:-bottom-2"
+                className="absolute -bottom-1 left-0 w-full text-[var(--ink)] opacity-30 drop-shadow-sm md:-bottom-2"
                 viewBox="0 0 200 15"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +227,7 @@ export function Hero({ orbit }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-10 md:gap-4"
+          className="relative z-10 mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-10 md:gap-4"
         >
           <a
             href="#about"
@@ -153,7 +239,7 @@ export function Hero({ orbit }: HeroProps) {
 
           <button
             onClick={() => setIsVideoOpen(true)}
-            className="group flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-8 font-sans text-[14px] font-medium text-[var(--ink)] no-underline transition-all hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] active:scale-[0.98] sm:w-auto"
+            className="group flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-8 font-sans text-[14px] font-medium text-[var(--ink)] no-underline backdrop-blur-sm transition-all hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] active:scale-[0.98] sm:w-auto"
           >
             <Play className="h-4 w-4 fill-current opacity-70 transition-opacity group-hover:opacity-100" />
             Watch Introduction
@@ -171,7 +257,7 @@ export function Hero({ orbit }: HeroProps) {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[100] h-[100svh] w-full overflow-y-auto overflow-x-hidden bg-[color:color-mix(in_srgb,var(--bg)_95%,transparent)] backdrop-blur-3xl backdrop-saturate-150"
           >
-            {/* Sticky Close Button - Optimized for mobile touch target */}
+            {/* Sticky Close Button */}
             <button
               onClick={() => setIsVideoOpen(false)}
               className="fixed right-4 top-4 z-[110] flex h-12 w-12 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] text-[var(--ink)] backdrop-blur-md transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] md:right-10 md:top-10"
