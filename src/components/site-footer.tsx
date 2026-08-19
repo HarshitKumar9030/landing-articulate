@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion, useSpring, useMotionValue, useTransform } from "framer-motion";
+import { APP_CONTENT } from "@/constants";
 
 export function SiteFooter({ onContactOpen }: { onContactOpen: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,7 +81,7 @@ export function SiteFooter({ onContactOpen }: { onContactOpen: () => void }) {
               onClick={onContactOpen} 
               className="group mt-10 flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-8 font-sans text-[14px] font-medium text-[var(--bg)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
             >
-              Start a conversation 
+              {APP_CONTENT.footer.conversationCta}
               <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2} />
             </button>
             
@@ -96,7 +97,9 @@ export function SiteFooter({ onContactOpen }: { onContactOpen: () => void }) {
               <div className="flex items-center gap-6 px-2">
                 <a 
                   className="font-sans text-[13px] font-medium text-[var(--muted)] no-underline transition-colors hover:text-[var(--ink)]" 
-                  href="#top"
+                  href={APP_CONTENT.footer.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Instagram
                 </a>
@@ -123,6 +126,7 @@ export function SiteFooter({ onContactOpen }: { onContactOpen: () => void }) {
           ref={containerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          aria-hidden="true"
           className="group relative flex min-h-[500px] w-full flex-1 cursor-crosshair items-center justify-center overflow-hidden rounded-[2.5rem] bg-[color:color-mix(in_srgb,var(--ink)_3%,transparent)] ring-1 ring-[color:color-mix(in_srgb,var(--ink)_5%,transparent)] lg:min-h-auto"
         >
           {/* Base Layer - Static, slightly dimmed out */}

@@ -11,6 +11,7 @@ export function Ticker() {
       and var(--bg) text to create the section break. 
     */
     <div
+      aria-hidden="true"
       className="relative flex w-full overflow-hidden py-5"
       style={{ backgroundColor: "var(--deep-bg)", color: "var(--deep-ink)" }}
     >

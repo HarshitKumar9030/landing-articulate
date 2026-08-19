@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "./reveal";
-import { CTA_EYEBROW } from "@/constants";
+import { APP_CONTENT, CTA_EYEBROW } from "@/constants";
 
 export function ConversationCta({ onContactOpen }: { onContactOpen: () => void }) {
   // We split the text into words so we can apply the focus-pull hover effect individually
-  const sentence = "Bring us the room, the message, or the deadline.";
+  const sentence = `${APP_CONTENT.conversationCta.headlineLead} ${APP_CONTENT.conversationCta.headlineAccent}`;
   const words = sentence.split(" ");
 
   return (
@@ -56,7 +56,7 @@ export function ConversationCta({ onContactOpen }: { onContactOpen: () => void }
             transition={{ duration: 0.8, delay: words.length * 0.04, ease: [0.16, 1, 0.3, 1] }}
             className="ml-[0.1em] mt-[0.1em] inline-flex items-center gap-[0.2em] whitespace-nowrap rounded-full bg-[var(--ink)] px-[0.4em] pb-[0.1em] pt-[0.15em] align-middle text-[var(--bg)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
           >
-            <span>Start</span>
+            <span>{APP_CONTENT.conversationCta.cta}</span>
 
             {/* Arrow Container */}
             <span className="flex h-[0.7em] w-[0.7em] items-center justify-center rounded-full bg-[var(--bg)] text-[var(--ink)]">

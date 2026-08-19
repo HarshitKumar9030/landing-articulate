@@ -9,7 +9,7 @@ export const APP_CONTENT = {
     getStarted: "Get started", menu: "Menu", close: "Close", toggleTheme: "Toggle theme",
   },
   hero: {
-    location: "New Delhi · Worldwide", intro: "Speak with clarity. Lead with presence.",
+    location: "Mumbai · Worldwide", intro: "Speak with clarity. Lead with presence.",
     headlineLead: "Make your message", headlineAccent: "land.",
     description: "ArticulateX is a professional speaking studio tailored for leaders with something meaningful to say.",
     exploreMethod: "Explore Method", watchIntroduction: "Watch Introduction",
@@ -18,7 +18,7 @@ export const APP_CONTENT = {
   ticker: ["Clarity", "Courage", "Connection", "Presence", "Impact"],
   focusAreas: {
     eyebrow: "Where we begin", headlineLead: "Not every message needs more", headlineAccent: "volume.",
-    supportingText: "The ones that matter need a sharper point of view.", cta: "Talk through your moment",
+    supportingText: "The ones that matter need a sharper point of view.", cta: "Book a free demo class",
     items: [
       { number: "01", title: "The leadership room", copy: "For decisions that need conviction, not just information." },
       { number: "02", title: "The founder story", copy: "For pitches, launches, and the moment your idea becomes public." },
@@ -40,27 +40,27 @@ export const APP_CONTENT = {
     ],
   },
   programs: {
-    eyebrow: "The studio", headlineLead: "Built for the", headlineAccent: "brave part.", cta: "Find your program",
+    eyebrow: "The studio", headlineLead: "Built for the", headlineAccent: "brave part.", cta: "Book a free demo class", detailCta: "Start with this program",
     items: [
-      { number: "01", title: "The Voice", description: "Find a voice that holds the room." },
-      { number: "02", title: "The Story", description: "Turn lived experience into signal." },
-      { number: "03", title: "The Room", description: "Make every audience feel seen." },
+      { number: "01", title: "The Voice", description: "Find a voice that sounds like you and holds the room.", story: "For speakers who have something important to say but want more ease, range, and presence when they say it. We work on breath, pace, emphasis, and the small choices that make a voice feel alive." },
+      { number: "02", title: "The Story", description: "Turn lived experience into a story people remember.", story: "For founders and leaders shaping a point of view. We find the thread in your experience, give it a clear shape, and build a story that earns attention without sounding rehearsed." },
+      { number: "03", title: "The Room", description: "Make every audience feel seen and ready to listen.", story: "For the moments where the room matters as much as the words. We prepare your message, read the energy in the audience, and help you lead with clarity when the stakes are high." },
     ],
   },
   quote: { lead: "The goal isn't to sound", accent: "like everyone else.", attribution: "— It's to be unmistakably you.", cta: "Hear the difference" },
-  conversationCta: { eyebrow: "A good place to start", headlineLead: "Bring us the room, the message, or the", headlineAccent: "deadline.", cta: "Start a conversation" },
+  conversationCta: { eyebrow: "A good place to start", headlineLead: "Book a free one-day demo", headlineAccent: "class.", cta: "Start" },
   footer: {
-    description: "Ideas deserve a voice with gravitational pull.", conversationCta: "Start a conversation", email: "hello@articulatex.in",
-    socialLinks: ["Instagram", "LinkedIn"], copyright: `&copy; ${new Date().getFullYear()} ArticulateX`, signoff: "Made for the memorable.",
+    description: "Ideas deserve a voice with gravitational pull.", conversationCta: "Book a free demo class", email: "hello@articulatex.in",
+    socialLinks: ["Instagram", "LinkedIn"], instagramUrl: "https://www.instagram.com/articulate.x/", copyright: `&copy; ${new Date().getFullYear()} ArticulateX`, signoff: "Made for the memorable.",
   },
   contact: {
     dialogLabel: "Contact ArticulateX", closeLabel: "Close contact form", eyebrow: "The next step", headlineLead: "Let's make", headlineAccent: "it land.",
-    copy: "Tell us what you want to say. We'll help you make it impossible to miss.", location: "New Delhi · Worldwide", formTitle: "What are we working on?",
+    copy: "Tell us what you want to say. We'll help you make it impossible to miss.", location: "Mumbai · Worldwide", formTitle: "What are we working on?",
     nameLabel: "Your name", namePlaceholder: "Jane Smith", emailLabel: "Email address", emailPlaceholder: "jane@company.com",
-    interestLabel: "I'm interested in", interests: ["Speaking coaching", "Team workshop", "A keynote", "Something else"],
+    interestLabel: "I'm interested in", interests: ["Free one-day demo class", "Speaking coaching", "Team workshop", "A keynote", "Something else"],
     messageLabel: "A few words", messagePlaceholder: "What do you need to make land?", submitLabel: "Send inquiry",
     successTitle: "We'll be in touch.", successCopy: "Thanks for reaching out. You'll hear from the ArticulateX team shortly to discuss next steps.",
-    returnLabel: "Back to the site", dockLabel: "Start a conversation", dismissDockLabel: "Dismiss dock",
+    returnLabel: "Back to the site", dockLabel: "Book a free demo class", dismissDockLabel: "Dismiss dock",
   },
 } as const;
 

@@ -10,6 +10,7 @@ import { Manifesto } from "./manifesto";
 import { Programs } from "./programs";
 import { QuoteSection } from "./quote-section";
 import { SiteFooter } from "./site-footer";
+import { BrandFooterReveal } from "./brand-footer-reveal";
 import { SiteHeader } from "./site-header";
 import { Ticker } from "./ticker";
 import { ContactDialog, ContactDock } from "./contact-dialog";
@@ -137,7 +138,7 @@ export function LandingPage() {
         onContactOpen={openContact}
       />
       
-      <Hero orbit={orbit} />
+      <Hero orbit={orbit} dark={dark} />
       <Ticker />
       <FocusAreas onContactOpen={openContact} />
       <Manifesto />
@@ -146,6 +147,7 @@ export function LandingPage() {
       <Programs onContactOpen={openContact} />
       <QuoteSection />
       <ConversationCta onContactOpen={openContact} />
+      {/* <BrandFooterReveal /> */}
       <SiteFooter onContactOpen={openContact} />
       <ContactDock onOpen={openContact} />
       <PaletteStudio activePalette={palette} tokens={activeTokens} onPaletteChange={applyPalette} onTokenChange={updatePaletteToken} onRandomize={randomizePalette} />

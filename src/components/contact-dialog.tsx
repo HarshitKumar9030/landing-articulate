@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, type ReactNode, type MouseEvent as ReactMouseEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import { ArrowRight, Send, X, MessageCircle } from "lucide-react";
+import { APP_CONTENT } from "@/constants";
 
 // ----------------------------------------------------------------------
 // Micro-interaction: Magnetic Physics Wrapper
@@ -116,7 +117,7 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
                 
                 <div className="mt-auto hidden pt-12 md:block">
                   <div className="font-sans text-[13px] leading-relaxed text-[color:color-mix(in_srgb,var(--bg)_50%,transparent)]">
-                    New Delhi · Worldwide<br />
+                    {APP_CONTENT.contact.location}<br />
                     <a href="mailto:hello@articulatex.in" className="text-[var(--bg)] no-underline transition-opacity hover:opacity-70">
                       hello@articulatex.in
                     </a>
@@ -235,14 +236,14 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
                         I’m interested in
                       </legend>
                       <div className="mt-4 flex flex-wrap gap-2">
-                        {["Speaking coaching", "Team workshop", "A keynote", "Something else"].map((option) => (
+                        {APP_CONTENT.contact.interests.map((option) => (
                           <label key={option} className="cursor-pointer">
                             <input 
                               className="peer sr-only" 
                               type="radio" 
                               name="interest" 
                               value={option} 
-                              defaultChecked={option === "Speaking coaching"} 
+                              defaultChecked={option === "Free one-day demo class"}
                             />
                             {/* Fluid pill selector */}
                             <span className="block rounded-full bg-[color:color-mix(in_srgb,var(--ink)_3%,transparent)] px-5 py-3 font-sans text-[13px] font-medium text-[var(--ink)] transition-all peer-checked:bg-[var(--ink)] peer-checked:text-[var(--bg)] hover:bg-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] peer-checked:hover:bg-[var(--ink)]">
@@ -317,7 +318,7 @@ export function ContactDock({ onOpen }: { onOpen: () => void }) {
           {/* Expanding Label Container */}
           <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[150px]">
             <span className="truncate whitespace-nowrap pl-2 pr-3 font-sans text-[14px] font-medium tracking-tight text-[var(--bg)]">
-              Start a conversation
+              {APP_CONTENT.contact.dockLabel}
             </span>
           </div>
         </button>

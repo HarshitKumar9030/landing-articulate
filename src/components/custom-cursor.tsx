@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -12,7 +12,9 @@ export function CustomCursor() {
     if (!supportsFinePointer) return;
 
     const updatePosition = (event: PointerEvent) => {
-      setPosition({ x: event.clientX, y: event.clientY });
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+      }
       setIsVisible(true);
     };
 
@@ -53,11 +55,9 @@ export function CustomCursor() {
 
   return (
     <div
+      ref={cursorRef}
       aria-hidden="true"
       className={`custom-cursor${isVisible ? " is-visible" : ""}${isActive ? " is-active" : ""}`}
-      style={{
-        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-      }}
     >
       <span className="custom-cursor__dot" />
     </div>

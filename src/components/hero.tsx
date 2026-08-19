@@ -1,21 +1,99 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { MotionValue } from "framer-motion";
+import { useEffect, useState } from "react";
+import type { MotionValue, Transition } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Play, X } from "lucide-react";
 import { MacbookScroll } from "@/components/ui/macbook";
+import { CloudShader } from "./cloud-shader";
+import { PlaneGame } from "./plane-game";
 
 type HeroProps = {
   orbit: MotionValue<number>;
+  dark?: boolean;
 };
 
-export function Hero({ orbit }: HeroProps) {
+// Hardcoded edge cities to keep the center completely clear for typography
+const EDGE_CITIES = [
+  { name: "London", top: "18%", left: "8%" },
+  { name: "Tokyo", top: "22%", right: "10%" },
+  { name: "New York", bottom: "30%", left: "12%" },
+  { name: "Dubai", bottom: "25%", right: "15%" },
+];
+
+function flightTransition(duration: number, delay: number, times: number[]): Transition {
+  return { duration, delay, repeat: Infinity, ease: "easeInOut", times };
+}
+
+// Flight paths for 4 distinct planes to create a dynamic, living airspace.
+// The new plane SVG points perfectly to the Right (0 degrees). 
+// Math: Moving Right = 0 to +/- 45deg. Moving Left = 135 to 225deg.
+const FLIGHT_PATHS = [
+  {
+    id: "flight-1",
+    // Primary mid-altitude pass (Left to Right)
+    animate: {
+      x: ["-20vw", "30vw", "75vw", "120vw"],
+      y: ["40vh", "5vh", "-10vh", "30vh"],
+      // Banking up, leveling out, then banking down
+      rotate: [-20, -15, 0, 25],
+      scale: [0.5, 1.2, 0.8, 0.4],
+      opacity: [0, 1, 0.8, 0],
+    },
+    transition: flightTransition(28, 0, [0, 0.35, 0.65, 1]),
+    className: "w-14 sm:w-16 lg:w-[80px] z-20",
+  },
+  {
+    id: "flight-2",
+    // High-altitude background pass (Right to Left)
+    animate: {
+      x: ["120vw", "70vw", "20vw", "-20vw"],
+      y: ["-10vh", "-20vh", "-5vh", "15vh"],
+      // Pointing left (180deg), banking up slightly then down
+      rotate: [195, 185, 165, 150], 
+      scale: [0.3, 0.5, 0.4, 0.2],
+      opacity: [0, 0.5, 0.4, 0],
+    },
+    transition: flightTransition(42, 5, [0, 0.3, 0.7, 1]),
+    className: "w-10 sm:w-12 lg:w-[50px] z-10",
+  },
+  {
+    id: "flight-3",
+    // Fast, low-altitude pass (Left to Right)
+    animate: {
+      x: ["-20vw", "40vw", "80vw", "120vw"],
+      y: ["70vh", "60vh", "50vh", "30vh"],
+      // Consistently banking upward
+      rotate: [-10, -15, -20, -25],
+      scale: [0.8, 1.5, 1.2, 0.7],
+      opacity: [0, 0.8, 0.8, 0],
+    },
+    transition: flightTransition(22, 12, [0, 0.4, 0.6, 1]),
+    className: "w-16 sm:w-20 lg:w-[100px] z-30",
+  },
+  {
+    id: "flight-4",
+    // Steep descent (Right to Left)
+    animate: {
+      x: ["120vw", "60vw", "10vw", "-20vw"],
+      y: ["10vh", "40vh", "60vh", "80vh"],
+      // Pointing left (180deg) and angled heavily downward
+      rotate: [160, 155, 150, 145],
+      scale: [0.4, 0.8, 1.1, 0.6],
+      opacity: [0, 0.7, 0.9, 0],
+    },
+    transition: flightTransition(32, 2, [0, 0.35, 0.65, 1]),
+    className: "w-12 sm:w-14 lg:w-[70px] z-20",
+  }
+];
+
+export function Hero({ orbit, dark = false }: HeroProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isGameOpen, setIsGameOpen] = useState(false);
 
   // Lock the main body scroll when the cinematic modal is open
   useEffect(() => {
-    if (isVideoOpen) {
+    if (isVideoOpen || isGameOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -23,18 +101,45 @@ export function Hero({ orbit }: HeroProps) {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isVideoOpen]);
+  }, [isGameOpen, isVideoOpen]);
 
   return (
     <>
       <section
         id="top"
-        className="relative flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-24 text-center md:pb-12 md:pt-32"
+        className="relative isolate flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-24 text-center md:pb-12 md:pt-32"
       >
+        <CloudShader
+          speed={0.8}
+          count={6}
+          cloudColor={dark ? "#dce8ed" : "#fff7e8"}
+          skyTopColor={dark ? "#17263b" : "#b7d3f2"}
+          skyBottomColor={dark ? "#3f6178" : "#f4c3a4"}
+          className="pointer-events-none absolute inset-0 z-0 opacity-85"
+        />
+
+        {/* Scattered Edge Pointers (Kept strictly to the periphery) */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2] opacity-70">
+          {EDGE_CITIES.map((city) => (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.5, delay: Math.random() * 0.5, ease: "easeOut" }}
+              key={city.name}
+              className="absolute flex items-center gap-2 font-mono text-[9px] font-medium uppercase tracking-[0.15em] text-[color:color-mix(in_srgb,var(--ink)_60%,transparent)] sm:text-[10px]"
+              style={{ top: city.top, bottom: city.bottom, left: city.left, right: city.right }}
+            >
+              <span className="relative flex h-3 w-3 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--ink)_30%,transparent)] bg-[color:color-mix(in_srgb,var(--bg)_20%,transparent)]">
+                <span className="h-1 w-1 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_50%,transparent)]" />
+              </span>
+              {city.name}
+            </motion.div>
+          ))}
+        </div>
+
         {/* Background glow - Immersive breathing/pulsing animation */}
         <motion.div
           animate={{
-            scale: [1, 1.05, 1],
             opacity: [0.7, 1, 0.7],
           }}
           transition={{
@@ -45,117 +150,35 @@ export function Hero({ orbit }: HeroProps) {
           className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--ink)_4%,transparent)_0%,transparent_70%)] blur-3xl md:w-[60vw]"
         />
 
-        {/* Clean, opaque architectural lines sweeping across the viewport without shadows/nodes */}
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          {/* Horizontal Line 1 */}
+        {/* 4 distinct aircraft passing through the scene */}
+        {FLIGHT_PATHS.map((flight) => (
           <motion.div
-            animate={{ y: ["-10vh", "110vh"] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute left-0 right-0 h-[1px] bg-[linear-gradient(to_right,transparent,color-mix(in_srgb,var(--ink)_40%,transparent)_50%,transparent)]"
-          />
-
-          {/* Horizontal Line 2 (Moving upward slowly) */}
-          <motion.div
-            animate={{ y: ["110vh", "-10vh"] }}
-            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-            className="absolute left-0 right-0 h-[1px] bg-[linear-gradient(to_right,transparent,color-mix(in_srgb,var(--ink)_30%,transparent)_70%,transparent)]"
-          />
-
-          {/* Vertical Line 1 */}
-          <motion.div
-            animate={{ x: ["-10vw", "110vw"] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-0 top-0 w-[1px] bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--ink)_40%,transparent)_50%,transparent)]"
-          />
-
-          {/* Vertical Line 2 (Moving left slowly) */}
-          <motion.div
-            animate={{ x: ["110vw", "-10vw"] }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-0 top-0 w-[1px] bg-[linear-gradient(to_bottom,transparent,color-mix(in_srgb,var(--ink)_30%,transparent)_60%,transparent)]"
-          />
-        </div>
-
-        {/* Floating Doodle 1: Abstract loop (Top Left) */}
-        <motion.div
-          initial={{ opacity: 0, rotate: -20, scale: 0.8 }}
-          animate={{ opacity: 1, rotate: 0, scale: 1 }}
-          transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
-          style={{ rotate: orbit }}
-          drag
-          dragConstraints={{ left: -40, right: 40, top: -40, bottom: 40 }}
-          dragElastic={0.4}
-          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-          whileHover={{ 
-            scale: 1.1, 
-            cursor: "grab", 
-            filter: "drop-shadow(0px 8px 16px color-mix(in_srgb, var(--ink) 15%, transparent))" 
-          }}
-          whileDrag={{ 
-            scale: 1.2, 
-            cursor: "grabbing", 
-            filter: "drop-shadow(0px 16px 24px color-mix(in_srgb, var(--ink) 25%, transparent))" 
-          }}
-          className="absolute left-[-2%] top-[10%] z-20 w-12 text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] sm:left-[2%] md:left-[10%] sm:w-16 lg:left-[15%] lg:top-[25%] lg:w-20"
-        >
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-            <path d="M20 80 C 20 20, 80 20, 80 80 C 80 120, 20 60, 40 40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.div>
-
-        {/* Floating Doodle 2: Speech Bubble (Mid Left) */}
-        <motion.div
-          initial={{ opacity: 0, x: -30, scale: 0.8 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
-          drag
-          dragConstraints={{ left: -50, right: 50, top: -50, bottom: 50 }}
-          dragElastic={0.4}
-          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-          whileHover={{ 
-            scale: 1.1, 
-            cursor: "grab", 
-            filter: "drop-shadow(0px 8px 16px color-mix(in_srgb, var(--ink) 15%, transparent))" 
-          }}
-          whileDrag={{ 
-            scale: 1.2, 
-            cursor: "grabbing", 
-            filter: "drop-shadow(0px 16px 24px color-mix(in_srgb, var(--ink) 25%, transparent))" 
-          }}
-          className="absolute left-[-5%] top-[75%] z-20 w-16 text-[color:color-mix(in_srgb,var(--ink)_12%,transparent)] sm:left-[-2%] md:left-[2%] sm:w-24 lg:left-[5%] lg:top-[50%] lg:w-[120px]"
-        >
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
-            <path d="M10 50 C 10 20, 90 20, 90 50 C 90 80, 50 80, 30 90 L 30 75 C 15 70, 10 60, 10 50 Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </motion.div>
-
-        {/* Floating Doodle 3: Aircraft Landing (Right) */}
-        <motion.div
-          initial={{ opacity: 0, x: 50, y: -60, rotate: -15 }}
-          animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
-          transition={{ delay: 0.9, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-          drag
-          dragConstraints={{ left: -60, right: 60, top: -60, bottom: 60 }}
-          dragElastic={0.4}
-          dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-          whileHover={{ 
-            scale: 1.15, 
-            rotate: -5,
-            cursor: "grab", 
-            filter: "drop-shadow(0px 10px 20px color-mix(in_srgb, var(--ink) 15%, transparent))" 
-          }}
-          whileDrag={{ 
-            scale: 1.25, 
-            rotate: -10,
-            cursor: "grabbing", 
-            filter: "drop-shadow(0px 20px 30px color-mix(in_srgb, var(--ink) 25%, transparent))" 
-          }}
-          className="absolute right-[-4%] top-[18%] z-20 w-14 text-[color:color-mix(in_srgb,var(--ink)_20%,transparent)] sm:right-[2%] md:right-[5%] sm:w-20 lg:right-[8%] lg:top-[38%] lg:w-[110px]"
-        >
-          <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className="h-full w-full -rotate-12">
-            <path d="M18.752 16.038c-.097.266-.822 1.002-6.029-.878l-5.105-1.843C5.841 12.676 3.34 11.668 2.36 11.1c-.686-.397-.836-1.282-.836-1.282s-.163-2.956-.263-3.684c-.1-.728.095-.853.796-.492.436.225 1.865 2.562 2.464 3.567 1.512.381 2.862.761 3.493.949-.257-1.717-.74-4.928-.913-5.933-.166-.963.55-.535.55-.535.331.19.983.661 1.206 1.002 1.522 2.326 3.672 6.6 3.836 6.928.896.28 2.277.733 3.102 1.03 2.156.779 3.087 3.034 2.957 3.388z" />
-          </svg>
-        </motion.div>
+            key={flight.id}
+            animate={flight.animate}
+            transition={flight.transition}
+            className={`pointer-events-auto absolute left-0 top-0 text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)] ${flight.className}`}
+          >
+            {/* Inner div handles the hover scaling without breaking the flight path physics */}
+            <motion.div
+              whileHover={{ 
+                scale: 1.25,
+                cursor: "pointer", 
+                filter: "drop-shadow(0px 10px 20px color-mix(in_srgb, var(--ink) 25%, transparent))" 
+              }}
+              onClick={() => setIsGameOpen(true)}
+              role="button"
+              tabIndex={0}
+              aria-label="Open Fly the message game"
+              onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setIsGameOpen(true); } }}
+              className="h-full w-full"
+            >
+              {/* Perfect top-down silhouette. Natively points Right (0deg). */}
+              <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+                <path d="M 21.9 11.1 L 16.5 11.1 L 11 2 L 8 2 L 12 11.1 L 5 11.1 L 2.5 8 L 1.5 8 L 3 12 L 1.5 16 L 2.5 16 L 5 12.9 L 12 12.9 L 8 22 L 11 22 L 16.5 12.9 L 21.9 12.9 C 23.1 12.9 24 12.5 24 12 C 24 11.5 23.1 11.1 21.9 11.1 Z" />
+              </svg>
+            </motion.div>
+          </motion.div>
+        ))}
 
         {/* Top Badge */}
         <motion.div
@@ -191,24 +214,6 @@ export function Hero({ orbit }: HeroProps) {
             Make your message{" "}
             <span className="relative inline-block whitespace-nowrap">
               land.
-              {/* Doodle 4: Hand-drawn Underline */}
-              <svg
-                className="absolute -bottom-1 left-0 w-full text-[var(--ink)] opacity-30 drop-shadow-sm md:-bottom-2"
-                viewBox="0 0 200 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                preserveAspectRatio="none"
-              >
-                <motion.path
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-                  d="M5 10 Q 50 2 100 8 T 195 10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-              </svg>
             </span>
           </motion.h1>
 
@@ -247,6 +252,8 @@ export function Hero({ orbit }: HeroProps) {
         </motion.div>
       </section>
 
+      <PlaneGame open={isGameOpen} onClose={() => setIsGameOpen(false)} />
+
       {/* Cinematic MacBook Scroll Overlay */}
       <AnimatePresence>
         {isVideoOpen && (
@@ -283,46 +290,3 @@ export function Hero({ orbit }: HeroProps) {
     </>
   );
 }
-
-// Peerlist logo exactly as provided
-const Badge = ({ className }: { className?: string }) => {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 56 56"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <path
-        d="M56 28C56 43.464 43.464 56 28 56C12.536 56 0 43.464 0 28C0 12.536 12.536 0 28 0C43.464 0 56 12.536 56 28Z"
-        fill="#00AA45"
-      ></path>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M28 54C42.3594 54 54 42.3594 54 28C54 13.6406 42.3594 2 28 2C13.6406 2 2 13.6406 2 28C2 42.3594 13.6406 54 28 54ZM28 56C43.464 56 56 43.464 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 43.464 12.536 56 28 56Z"
-        fill="#219653"
-      ></path>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M27.0769 12H15V46H24.3846V38.8889H27.0769C34.7305 38.8889 41 32.9048 41 25.4444C41 17.984 34.7305 12 27.0769 12ZM24.3846 29.7778V21.1111H27.0769C29.6194 21.1111 31.6154 23.0864 31.6154 25.4444C31.6154 27.8024 29.6194 29.7778 27.0769 29.7778H24.3846Z"
-        fill="#24292E"
-      ></path>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M18 11H29.0769C36.2141 11 42 16.5716 42 23.4444C42 30.3173 36.2141 35.8889 29.0769 35.8889H25.3846V43H18V11ZM25.3846 28.7778H29.0769C32.1357 28.7778 34.6154 26.39 34.6154 23.4444C34.6154 20.4989 32.1357 18.1111 29.0769 18.1111H25.3846V28.7778Z"
-        fill="white"
-      ></path>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M17 10H29.0769C36.7305 10 43 15.984 43 23.4444C43 30.9048 36.7305 36.8889 29.0769 36.8889H26.3846V44H17V10ZM19 12V42H24.3846V34.8889H29.0769C35.6978 34.8889 41 29.7298 41 23.4444C41 17.1591 35.6978 12 29.0769 12H19ZM24.3846 17.1111H29.0769C32.6521 17.1111 35.6154 19.9114 35.6154 23.4444C35.6154 26.9775 32.6521 29.7778 29.0769 29.7778H24.3846V17.1111ZM26.3846 19.1111V27.7778H29.0769C31.6194 27.7778 33.6154 25.8024 33.6154 23.4444C33.6154 21.0864 31.6194 19.1111 29.0769 19.1111H26.3846Z"
-        fill="#24292E"
-      ></path>
-    </svg>
-  );
-};

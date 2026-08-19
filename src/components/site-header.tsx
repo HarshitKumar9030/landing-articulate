@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { Moon, Sun, ArrowRight } from "lucide-react";
+import { APP_CONTENT } from "@/constants";
 
 type SiteHeaderProps = {
   dark: boolean;
@@ -150,9 +151,9 @@ export function SiteHeader({ dark, menuOpen, onMenuToggle, onThemeToggle, onNavi
             <a
               href="#contact"
               onClick={(event) => { event.preventDefault(); onContactOpen(); }}
-              className="group hidden h-9 items-center justify-center gap-1.5 rounded-full bg-white pl-4 pr-3 font-sans text-[13px] font-medium text-black no-underline transition-all duration-300 hover:bg-neutral-50 active:scale-[0.97] lg:flex"
+              className={`group hidden h-9 items-center justify-center gap-1.5 rounded-full pl-4 pr-3 font-sans text-[13px] font-medium no-underline transition-all duration-300 active:scale-[0.97] lg:flex ${dark ? "bg-white text-black hover:bg-neutral-50" : "bg-neutral-900 text-white hover:bg-neutral-800"}`}
             >
-              Get started
+              {APP_CONTENT.navigation.getStarted}
               <ArrowRight className="h-3.5 w-3.5 opacity-70 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
             </a>
 
@@ -197,10 +198,10 @@ export function SiteHeader({ dark, menuOpen, onMenuToggle, onThemeToggle, onNavi
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ delay: NAV_ITEMS.length * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               onClick={(event) => { event.preventDefault(); onNavigate(); onContactOpen(); }}
-              className="mt-8 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-white px-8 font-sans text-[14px] font-medium text-black no-underline transition-colors hover:bg-neutral-50 active:scale-[0.98]"
+              className={`mt-8 flex h-14 w-full items-center justify-center gap-2 rounded-full px-8 font-sans text-[14px] font-medium no-underline transition-colors active:scale-[0.98] ${dark ? "bg-white text-black hover:bg-neutral-50" : "bg-neutral-900 text-white hover:bg-neutral-800"}`}
               href="#contact"
             >
-              Get started
+              {APP_CONTENT.navigation.getStarted}
               <ArrowRight className="h-4 w-4" />
             </motion.a>
           </motion.div>
