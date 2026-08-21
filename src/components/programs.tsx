@@ -7,46 +7,64 @@ import { Reveal } from "./reveal";
 import { APP_CONTENT } from "@/constants"; 
 
 // ----------------------------------------------------------------------
+// Hardware-Accelerated CSS Keyframes (Offloads infinite loops to GPU)
+// ----------------------------------------------------------------------
+const ShaderStyles = () => (
+  <style dangerouslySetInnerHTML={{__html: `
+    @keyframes orb-float-1 {
+      0%, 100% { transform: translate3d(-12%, -10%, 0) scale(1); }
+      33% { transform: translate3d(18%, 12%, 0) scale(1.05); }
+      66% { transform: translate3d(-8%, -6%, 0) scale(0.95); }
+    }
+    @keyframes orb-float-2 {
+      0%, 100% { transform: translate3d(14%, 12%, 0) scale(1); }
+      33% { transform: translate3d(-12%, -14%, 0) scale(0.95); }
+      66% { transform: translate3d(10%, 16%, 0) scale(1.05); }
+    }
+    .animate-orb-1 { animation: orb-float-1 infinite ease-in-out; }
+    .animate-orb-2 { animation: orb-float-2 infinite ease-in-out; }
+  `}} />
+);
+
+// ----------------------------------------------------------------------
 // Apple Music-Style Hyper-Vivid Shader Background
 // ----------------------------------------------------------------------
 function FluidShaderBackground({ variant }: { variant: number }) {
+  // Perfected palettes matched exactly to image_68e609.jpg
+  // Base is the bright center, Orb 1 is the dark top-left, Orb 2 is the vibrant bottom-right
   const palettes = [
-    ["#b30000", "#ffaa00", "#ffea00", "#ff3300"],
-    ["#003377", "#00eeaa", "#00ffcc", "#0088ff"],
-    ["#cc1144", "#ff88aa", "#ffeeee", "#ff0055"],
+    // 01: The Voice - Bright Yellow center, Deep Red/Burnt Orange edges
+    ["#FFD100", "#8A0000", "#E65C00"],
+    // 02: The Story - Bright Mint center, Deep Navy/Teal edges
+    ["#00E08A", "#001845", "#009E8E"],
+    // 03: The Room - Soft Pale Pink center, Deep Magenta/Rose edges
+    ["#FFD6E0", "#9E0031", "#E8487A"],
   ];
+  
   const colors = palettes[variant % palettes.length];
   const motionProfiles = [
-    { first: 12, second: 16, third: 20 },
-    { first: 15, second: 11, third: 18 },
-    { first: 10, second: 18, third: 14 },
+    { first: 18, second: 24 },
+    { first: 22, second: 16 },
+    { first: 16, second: 26 },
   ];
   const profile = motionProfiles[variant % motionProfiles.length];
 
   return (
     <div 
       className="absolute inset-0 -z-10 overflow-hidden" 
-      style={{ backgroundColor: colors[0] }}
+      // Force hardware acceleration layering to prevent layout thrash during expansion
+      style={{ backgroundColor: colors[0], transform: "translateZ(0)" }}
     >
-      <motion.div
-        animate={{ x: ["-20%", "30%", "-10%", "-20%"], y: ["-20%", "10%", "30%", "-20%"], scale: [1, 1.4, 1.1, 1] }}
-        transition={{ duration: profile.first, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-[20%] -top-[20%] h-[150%] w-[150%] rounded-full opacity-100 blur-[80px]"
-        style={{ backgroundColor: colors[1] }}
+      <div
+        className="animate-orb-1 absolute -left-[12%] -top-[14%] h-[118%] w-[118%] rounded-full opacity-100 blur-[40px]"
+        style={{ backgroundColor: colors[1], animationDuration: `${profile.first}s` }}
       />
-      <motion.div
-        animate={{ x: ["30%", "-10%", "20%", "30%"], y: ["20%", "-30%", "10%", "20%"], scale: [1.2, 0.9, 1.3, 1.2] }}
-        transition={{ duration: profile.second, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -right-[30%] -top-[10%] h-[150%] w-[150%] rounded-full opacity-100 blur-[90px]"
-        style={{ backgroundColor: colors[2] }}
+      <div
+        className="animate-orb-2 absolute -right-[16%] -bottom-[12%] h-[112%] w-[112%] rounded-full opacity-100 blur-[40px]"
+        style={{ backgroundColor: colors[2], animationDuration: `${profile.second}s` }}
       />
-      <motion.div
-        animate={{ x: ["0%", "25%", "-20%", "0%"], y: ["20%", "-10%", "-30%", "20%"], scale: [1, 1.3, 1, 1] }}
-        transition={{ duration: profile.third, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -bottom-[40%] -right-[10%] h-[150%] w-[150%] rounded-full opacity-100 blur-[70px]"
-        style={{ backgroundColor: colors[3] }}
-      />
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.12] mix-blend-overlay" />
+      {/* Subtle darkening vignette to ensure white text remains legible on bright centers */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_20%,rgba(0,0,0,0.15)_100%)]" />
     </div>
   );
 }
@@ -61,10 +79,8 @@ const cardRevealProfiles = [
 // Main Programs Section
 // ----------------------------------------------------------------------
 export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
-  // Track which card is currently expanded
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
-  // Lock body scroll when a card is expanded
   useEffect(() => {
     if (activeCard !== null) {
       document.body.style.overflow = "hidden";
@@ -79,6 +95,7 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
       id="programs" 
       className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-[var(--bg)] px-[clamp(24px,5vw,80px)] py-24 md:py-32"
     >
+      <ShaderStyles />
       <div className="relative z-10 mx-auto w-full max-w-6xl">
         <Reveal>
           <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[13px] font-medium tracking-tight text-[var(--ink)]">
@@ -110,6 +127,8 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                 whileTap="tap"
                 variants={{ hover: { scale: 1.02 }, tap: { scale: 0.98 } }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                // Added transform: translateZ(0) to force hardware layer rendering
+                style={{ transform: "translateZ(0)" }}
                 className="group relative flex aspect-[3/4] w-full cursor-pointer flex-col overflow-hidden rounded-[2rem] bg-transparent sm:aspect-square md:aspect-[3/4]"
               >
                 <FluidShaderBackground variant={index} />
@@ -125,13 +144,19 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                   </div>
 
                   <motion.div layoutId={`title-container-${index}`} className="flex flex-1 items-center justify-center">
-                    <motion.h3 layoutId={`title-${index}`} className="m-0 text-center font-sans text-[clamp(48px,5vw,72px)] font-bold leading-[0.9] tracking-tighter text-white">
+                    <motion.h3 
+                      layoutId={`title-${index}`} 
+                      className="m-0 text-center font-sans text-[clamp(48px,5vw,72px)] font-bold leading-[0.9] tracking-tighter text-white drop-shadow-sm"
+                    >
                       {title}
                     </motion.h3>
                   </motion.div>
 
                   <div className="flex items-end justify-between gap-4">
-                    <motion.p layoutId={`desc-${index}`} className="m-0 max-w-[200px] font-sans text-[13px] font-medium leading-relaxed text-white">
+                    <motion.p 
+                      layoutId={`desc-${index}`} 
+                      className="m-0 max-w-[200px] font-sans text-[13px] font-medium leading-relaxed text-white drop-shadow-sm"
+                    >
                       {description}
                     </motion.p>
                     
@@ -175,10 +200,6 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
         </motion.div>
       </div>
 
-      {/* 
-        Expanded Full-Screen Story View 
-        Uses the exact same layoutIds to create the morphing effect.
-      */}
       <AnimatePresence>
         {activeCard !== null && (
           <motion.div 
@@ -186,19 +207,17 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            // Fix for Lenis smooth scrolling inside modal
             data-lenis-prevent="true"
           >
             <motion.div
               layoutId={`card-${activeCard}`}
               className="relative flex min-h-screen w-full flex-col overflow-hidden rounded-none"
+              style={{ transform: "translateZ(0)" }} // Hardware acceleration during modal morph
             >
-              {/* Background continues playing seamlessly */}
               <FluidShaderBackground variant={activeCard} />
 
               <div className="relative z-10 mx-auto flex h-full w-full max-w-4xl flex-col px-[clamp(24px,5vw,80px)] py-12 md:py-20">
                 
-                {/* Header Row */}
                 <div className="flex w-full items-start justify-between">
                   <motion.span layoutId={`number-${activeCard}`} className="font-mono text-[13px] font-bold tracking-[0.1em] text-white/80">
                     {APP_CONTENT.programs.items[activeCard].number}
@@ -209,7 +228,6 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                         <span className="opacity-80">{APP_CONTENT.brand.wordmark}</span>{APP_CONTENT.brand.mark}
                     </motion.div>
                     
-                    {/* Close Button */}
                     <button 
                       onClick={() => setActiveCard(null)}
                       className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-colors hover:bg-white/20 active:scale-95"
@@ -219,17 +237,17 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                   </div>
                 </div>
 
-                {/* Expanded Story Content */}
                 <div className="mt-20 flex flex-1 flex-col justify-center">
                   
-                  {/* Title moves from center of small card to top-left editorial position */}
                   <motion.div layoutId={`title-container-${activeCard}`} className="flex justify-start">
-                    <motion.h3 layoutId={`title-${activeCard}`} className="m-0 font-sans text-[clamp(56px,8vw,120px)] font-bold leading-[0.9] tracking-tighter text-white">
+                    <motion.h3 
+                      layoutId={`title-${activeCard}`} 
+                      className="m-0 font-sans text-[clamp(56px,8vw,120px)] font-bold leading-[0.9] tracking-tighter text-white drop-shadow-sm"
+                    >
                       {APP_CONTENT.programs.items[activeCard].title}
                     </motion.h3>
                   </motion.div>
 
-                  {/* Fading in the story */}
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -237,11 +255,14 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                     transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     className="mt-12 max-w-2xl"
                   >
-                    <motion.p layoutId={`desc-${activeCard}`} className="m-0 font-sans text-[clamp(20px,3vw,32px)] font-medium leading-[1.3] tracking-tight text-white/90">
+                    <motion.p 
+                      layoutId={`desc-${activeCard}`} 
+                      className="m-0 font-sans text-[clamp(20px,3vw,32px)] font-medium leading-[1.3] tracking-tight text-white/90 drop-shadow-sm"
+                    >
                       {APP_CONTENT.programs.items[activeCard].description}
                     </motion.p>
                     
-                    <p className="mt-8 font-sans text-[16px] leading-relaxed text-white/70 md:text-[18px]">
+                    <p className="mt-8 font-sans text-[16px] leading-relaxed text-white/80 md:text-[18px]">
                       {APP_CONTENT.programs.items[activeCard].story}
                     </p>
 

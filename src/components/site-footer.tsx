@@ -115,9 +115,13 @@ export function SiteFooter({ onContactOpen }: { onContactOpen: () => void }) {
             </div>
           </div>
           
-          <div className="mt-20 flex flex-col gap-2 font-sans text-[12px] font-medium tracking-tight text-[var(--muted)] sm:flex-row sm:items-center sm:gap-6">
+          <div className="mt-20 flex flex-col gap-3 font-sans text-[12px] font-medium tracking-tight text-[var(--muted)] sm:flex-row sm:items-center sm:gap-6">
             <p className="m-0">© {new Date().getFullYear()} ArticulateX</p>
             <p className="m-0 sm:before:mr-6 sm:before:content-['|'] sm:before:text-[color:color-mix(in_srgb,var(--ink)_10%,transparent)]">Made for the memorable.</p>
+            <div className="flex items-center gap-4 sm:before:mr-0 sm:before:content-none">
+              <a className="no-underline transition-colors hover:text-[var(--ink)]" href="/privacy-policy">Privacy</a>
+              <a className="no-underline transition-colors hover:text-[var(--ink)]" href="/terms-of-service">Terms</a>
+            </div>
           </div>
         </div>
 
