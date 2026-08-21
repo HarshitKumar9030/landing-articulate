@@ -205,7 +205,7 @@ export function CloudShader({
     let running = true;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
       const width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
       const height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
       if (canvas.width !== width || canvas.height !== height) {
@@ -220,9 +220,24 @@ export function CloudShader({
     observer.observe(canvas);
     resize();
     const start = performance.now();
+    let lastFrame = 0;
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible && !frame) frame = requestAnimationFrame(draw);
+    }, { threshold: 0.01 });
+    visibilityObserver.observe(canvas);
 
     const draw = (now: number) => {
-      if (!running) return;
+      if (!running || !isVisible) {
+        frame = 0;
+        return;
+      }
+      if (now - lastFrame < 33) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
       const params = paramsRef.current;
       const elapsed = reducedMotion ? 0 : ((now - start) / 1000) * params.speed;
       const cloud = parseColor(params.cloudColor);
@@ -242,6 +257,7 @@ export function CloudShader({
       running = false;
       cancelAnimationFrame(frame);
       observer.disconnect();
+      visibilityObserver.disconnect();
       gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
       gl.deleteShader(vertexShader);

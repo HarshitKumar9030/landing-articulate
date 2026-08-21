@@ -111,7 +111,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
       >
         <CloudShader
           speed={0.8}
-          count={6}
+          count={4}
           cloudColor={dark ? "#dce8ed" : "#fff7e8"}
           skyTopColor={dark ? "#17263b" : "#b7d3f2"}
           skyBottomColor={dark ? "#3f6178" : "#f4c3a4"}
