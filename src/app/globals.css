@@ -172,3 +172,31 @@
   from { background-position: 0% 0%; }
   to { background-position: 12% -8%; }
 }
+
+/* Accessibility preferences are set by the Studio palette and persist in local storage. */
+html[data-large-text="true"] {
+  font-size: 112.5%;
+}
+
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  transition-duration: 0.01ms !important;
+}
+
+html[data-high-contrast="true"] .site {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --ink: #000000;
+  --muted: #1f2937;
+  --line: #000000;
+  --primary: #003bb3;
+  --violet: #5b168a;
+  --tint: #e9efff;
+  --deep-bg: #000000;
+  --deep-ink: #ffffff;
+  --deep-dot: #ffffff;
+}

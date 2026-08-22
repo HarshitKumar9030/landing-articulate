@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { LegalDocument, LegalList, LegalNumbered } from "@/components/legal-document";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | ArticulateX",
+  title: "Terms of Service",
   description: "Terms governing access to ArticulateX programmes, courses, workshops, and services.",
+  alternates: { canonical: "/terms-of-service" },
+  robots: { index: true, follow: true },
 };
 
 export default function TermsOfServicePage() {

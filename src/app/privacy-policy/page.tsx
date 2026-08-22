@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { LegalDocument, LegalList, LegalNumbered } from "@/components/legal-document";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | ArticulateX",
+  title: "Privacy Policy",
   description: "How ArticulateX collects, uses, stores, and protects personal information.",
+  alternates: { canonical: "/privacy-policy" },
+  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPolicyPage() {

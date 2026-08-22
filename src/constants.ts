@@ -2,6 +2,7 @@ export const APP_CONTENT = {
   brand: { wordmark: "Articulate", mark: "X", uppercase: "ARTICULATE" },
   navigation: {
     items: [
+      { name: "Courses", href: "#courses" },
       { name: "Programs", href: "#programs" },
       { name: "Method", href: "#about" },
       { name: "Contact", href: "#contact" },
@@ -37,6 +38,30 @@ export const APP_CONTENT = {
       { number: "01", title: "Find the signal", copy: "We reduce the noise and name the one thing your audience should remember.", details: "We dissect your raw material—notes, ramblings, previous decks—and distill it into a singular, undeniable thesis. No jargon. No fluff. Just the core truth of what you need to say." },
       { number: "02", title: "Build the shape", copy: "We structure language, rhythm, and visuals around the way people actually listen.", details: "Great ideas die in dense paragraphs. We pace your delivery, map out the emotional arcs, and build visual anchors so your audience stays with you from the first breath to the final pause." },
       { number: "03", title: "Make it yours", copy: "We rehearse until the message feels less performed and more like you on your best day.", details: "This isn't about memorizing a script. We pressure-test your delivery in a studio setting, stripping away the speaker voice and adjusting the rhythm until the words feel completely natural." },
+    ],
+  },
+  courses: {
+    eyebrow: "Courses offered",
+    headlineLead: "Practice for the",
+    headlineAccent: "moments that matter.",
+    copy: "Focused learning experiences for the rooms, stories and decisions that shape what happens next.",
+    cta: "Ask about a course",
+    items: [
+      { code: "01", title: "Executive presence", description: "A sharper way to hold attention when the room is looking to you.", format: "Live cohort · 4 weeks", accent: "signal" },
+      { code: "02", title: "The founder pitch", description: "Build the narrative, structure and delivery behind a credible yes.", format: "Studio intensive · 2 days", accent: "violet" },
+      { code: "03", title: "Speak with clarity", description: "Turn complex thinking into language people can follow and repeat.", format: "Live cohort · 6 weeks", accent: "ink" },
+      { code: "04", title: "Leading the room", description: "Facilitate decisions, difficult conversations and high-stakes meetings with more intent.", format: "Team workshop · 1 day", accent: "tint" },
+      { code: "05", title: "Story as strategy", description: "Give the experience behind your work a shape people remember.", format: "Private studio · 3 sessions", accent: "line" },
+    ],
+  },
+  testimonials: {
+    eyebrow: "In their words",
+    headlineLead: "The work changes",
+    headlineAccent: "the room.",
+    items: [
+      { quote: "I stopped trying to sound impressive and started sounding like I knew exactly what I meant. That changed every conversation after.", name: "Founder", context: "Illustrative feedback · replace before launch" },
+      { quote: "The structure gave our whole leadership team a shared language. Meetings became shorter, clearer, and much more decisive.", name: "Strategy leader", context: "Illustrative feedback · replace before launch" },
+      { quote: "It was not a confidence course. It was a thinking course disguised as speaking practice—and exactly what I needed.", name: "Independent consultant", context: "Illustrative feedback · replace before launch" },
     ],
   },
   programs: {

@@ -20,6 +20,8 @@ import { ConversationCta } from "./conversation-cta";
 import { EntryLoader } from "./entry-loader";
 import { PaletteStudio } from "./palette-studio";
 import { AboutUs } from "./about-us";
+import { CoursesOffered } from "./courses-offered";
+import { Testimonials } from "./testimonials";
 import { createRandomPalette, PALETTES, type Palette, type PaletteTokens } from "@/constants";
 import { track } from "@vercel/analytics";
 
@@ -144,7 +146,9 @@ export function LandingPage() {
       <Manifesto />
       <AboutUs />
       <MethodSection />
+      <CoursesOffered onContactOpen={openContact} />
       <Programs onContactOpen={openContact} />
+      <Testimonials />
       <QuoteSection />
       <ConversationCta onContactOpen={openContact} />
       {/* <BrandFooterReveal /> */}

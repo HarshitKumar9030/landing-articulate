@@ -14,11 +14,7 @@ type SiteHeaderProps = {
   onContactOpen: () => void;
 };
 
-const NAV_ITEMS = [
-  { name: "Programs", href: "#programs" },
-  { name: "Method", href: "#about" },
-  { name: "Contact", href: "#contact" },
-];
+const NAV_ITEMS = APP_CONTENT.navigation.items;
 
 export function SiteHeader({ dark, menuOpen, onMenuToggle, onThemeToggle, onNavigate, onContactOpen }: SiteHeaderProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

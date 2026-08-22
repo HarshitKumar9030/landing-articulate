@@ -3,7 +3,8 @@
 import { useState, useRef, type ReactNode, type MouseEvent as ReactMouseEvent } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
 import { Dices, Palette, X } from "lucide-react";
-import { PALETTES, type Palette as PaletteType, type PaletteTokens } from "@/constants";
+import { APP_CONTENT, PALETTES, type Palette as PaletteType, type PaletteTokens } from "@/constants";
+import { AccessibilityTools } from "./accessibility-tools";
 
 // ----------------------------------------------------------------------
 // Micro-interaction: Magnetic Physics Wrapper
@@ -149,15 +150,19 @@ export function PaletteStudio({
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="absolute bottom-20 left-0 w-[min(340px,calc(100vw-48px))] overflow-hidden rounded-[2rem] bg-[var(--ink)] p-6 text-[var(--bg)]" 
+              id="studio-palette-panel"
+              role="dialog"
+              aria-modal="false"
+              aria-labelledby="studio-palette-title"
+              className="absolute bottom-20 left-0 max-h-[calc(100svh-7rem)] w-[min(340px,calc(100vw-48px))] overflow-y-auto rounded-[2rem] bg-[var(--ink)] p-6 text-[var(--bg)]"
             >
               <motion.div variants={itemVariants} className="mb-6 flex items-start justify-between">
                 <div>
-                  <h2 className="font-sans text-[28px] font-semibold leading-none tracking-tight text-[var(--bg)]">
+                  <h2 id="studio-palette-title" className="font-sans text-[28px] font-semibold leading-none tracking-tight text-[var(--bg)]">
                     Studio.
                   </h2>
                   <div className="mt-2 font-sans text-[14px] font-medium text-[color:color-mix(in_srgb,var(--bg)_60%,transparent)]">
-                    Select your theme
+                    Palette, type, and motion
                   </div>
                 </div>
                 
@@ -237,6 +242,12 @@ export function PaletteStudio({
                 <Dices size={16} strokeWidth={2} className="transition-transform duration-500 group-hover:rotate-180" /> 
                 Randomize
               </motion.button>
+
+              <motion.div variants={itemVariants}>
+                <AccessibilityTools
+                  readerText={`${APP_CONTENT.hero.description} ${APP_CONTENT.manifesto.copy} ${APP_CONTENT.method.supportingText}`}
+                />
+              </motion.div>
             </motion.section>
           )}
         </AnimatePresence>
@@ -250,7 +261,10 @@ export function PaletteStudio({
             transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <button 
-              onClick={() => setOpen((prev) => !prev)} 
+              onClick={() => setOpen((prev) => !prev)}
+              aria-expanded={open}
+              aria-controls="studio-palette-panel"
+              aria-label="Open Studio palette and accessibility settings"
               className="flex h-14 cursor-pointer items-center justify-center rounded-full bg-[var(--ink)] p-2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.96]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--bg)] text-[var(--ink)] transition-transform duration-500 group-hover:rotate-12">
@@ -260,7 +274,7 @@ export function PaletteStudio({
               {/* Expanding Label Container */}
               <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[70px]">
                 <span className="truncate whitespace-nowrap pl-3 pr-2 font-sans text-[14px] font-medium tracking-tight text-[var(--bg)]">
-                  Studio
+                Studio palette
                 </span>
               </div>
             </button>
