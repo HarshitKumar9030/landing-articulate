@@ -255,7 +255,6 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
                         placeholder="John Doe" 
                         className="w-full bg-transparent pb-3 pt-4 font-sans text-[24px] font-medium text-[var(--ink)] outline-none transition-colors placeholder:text-[color:color-mix(in_srgb,var(--ink)_15%,transparent)] md:text-[32px]" 
                       />
-                      {/* FIX: Used Tailwind 'origin-left' instead of 'style={{ originX: 0 }}' */}
                       <motion.div variants={borderVariants} className="absolute bottom-0 left-0 h-px w-full origin-left bg-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]" />
                       <div className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-[var(--ink)] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-focus-within:scale-x-100" />
                     </motion.div>
@@ -342,7 +341,7 @@ export function ContactDialog({ open, onClose }: ContactDialogProps) {
 }
 
 // ----------------------------------------------------------------------
-// Premium Floating Dock Trigger (Breathing Animation)
+// Unified Floating Dock Trigger
 // ----------------------------------------------------------------------
 export function ContactDock({ onOpen }: { onOpen: () => void }) {
   const [dismissed, setDismissed] = useState(false);
@@ -350,34 +349,37 @@ export function ContactDock({ onOpen }: { onOpen: () => void }) {
   if (dismissed) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-10">
+    <div className="fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8">
       <motion.div 
-        className="group flex flex-row-reverse items-center gap-3"
-        initial={{ opacity: 0, y: 30, scale: 0.8 }} 
+        // flex-row-reverse allows the dock to expand to the left, away from the screen edge
+        className="group flex flex-row-reverse items-center gap-2"
+        initial={{ opacity: 0, y: 20, scale: 0.9 }} 
         animate={{ opacity: 1, y: 0, scale: 1 }} 
-        transition={{ delay: 1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       >
-        <motion.button 
+        <button 
           onClick={onOpen} 
-          animate={{ boxShadow: ["0px 0px 0px rgba(0,0,0,0)", "0px 10px 40px rgba(0,0,0,0.15)", "0px 0px 0px rgba(0,0,0,0)"] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative flex h-16 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] bg-[color:color-mix(in_srgb,var(--bg)_80%,transparent)] p-2 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.03] hover:bg-[color:color-mix(in_srgb,var(--bg)_95%,transparent)] active:scale-95"
+          aria-label="Open contact form"
+          className="flex h-14 cursor-pointer items-center justify-center rounded-full bg-[var(--ink)] p-2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:scale-[1.02] active:scale-[0.96]"
         >
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--bg)] transition-transform duration-500 group-hover:-rotate-12">
-            <MessageCircle size={20} strokeWidth={1.5} />
-          </div>
-          
-          <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[150px]">
-            <span className="truncate whitespace-nowrap pl-3 pr-5 font-sans text-[15px] font-semibold tracking-tight text-[var(--ink)]">
+          {/* Expanding Label Container (placed FIRST so it expands to the left of the icon) */}
+          <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[130px]">
+            <span className="truncate whitespace-nowrap pl-3 pr-2 font-sans text-[14px] font-medium tracking-tight text-[var(--bg)]">
               {APP_CONTENT.contact.dockLabel}
             </span>
           </div>
-        </motion.button>
 
-        <div className="grid w-0 overflow-hidden opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-12 group-hover:opacity-100">
+          {/* Circular Icon Wrapper */}
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--bg)] text-[var(--ink)] transition-transform duration-500 group-hover:-rotate-12">
+            <MessageCircle size={18} strokeWidth={1.5} />
+          </div>
+        </button>
+
+        {/* Hidden Dismiss Button that slides out smoothly on hover */}
+        <div className="grid w-0 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-10">
           <button 
             onClick={(e) => { e.stopPropagation(); setDismissed(true); }}
-            className="flex size-12 cursor-pointer items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] bg-[color:color-mix(in_srgb,var(--bg)_80%,transparent)] text-[var(--ink)] backdrop-blur-xl transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_5%,transparent)]"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] text-[var(--ink)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]"
             aria-label="Dismiss dock"
           >
             <X size={16} strokeWidth={2} />

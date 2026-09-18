@@ -4,9 +4,10 @@ import "lenis/dist/lenis.css";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScrollProvider } from "@/components/scroll-provider";
-import { CustomCursor } from "@/components/custom-cursor";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "sonner";
+import { ConnectivityWrapper } from "@/components/connectivity-wrapper";
 
 const siteUrl = new URL("https://articulatex.in");
 const siteTitle = "ArticulateX";
@@ -47,13 +48,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className={cn(mono.variable, mono.className, "font-sans", geist.variable)} suppressHydrationWarning>
-      <body className="antialiased bg-white text-gray-900 transition-colors dark:bg-gray-950 dark:text-gray-100">
+      <body className="antialiased transition-colors">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <ThemeProvider>
-          <SmoothScrollProvider>
-            <CustomCursor />
-            {children}
-          </SmoothScrollProvider>
+          <ConnectivityWrapper>
+            <SmoothScrollProvider>
+              {children}
+            </SmoothScrollProvider>
+            <Toaster 
+              position="bottom-right" 
+              toastOptions={{
+                className: "rounded-[1.5rem] bg-[color:color-mix(in_srgb,var(--ink)_5%,transparent)] border border-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] text-[var(--ink)] font-sans backdrop-blur-xl shadow-2xl",
+                style: { WebkitBackdropFilter: "blur(20px) saturate(180%)", backdropFilter: "blur(20px) saturate(180%)" }
+              }} 
+            />
+          </ConnectivityWrapper>
         </ThemeProvider>
         <Analytics />
       </body>

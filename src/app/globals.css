@@ -1,7 +1,34 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* @theme { --font-sans: "DM Sans", sans-serif; --font-mono: "DM Mono --font-brand: "Manrope", sans-serif; } */
 @layer base {
+  :root {
+    --bg: #f7f8fc;
+    --surface: #fff;
+    --ink: #111525;
+    --muted: #697084;
+    --line: #e4e7ef;
+    --primary: #2955d9;
+    --violet: #7253e7;
+    --tint: #f0f3ff;
+    --deep-bg: #111525;
+    --deep-ink: #f7f8fc;
+    --deep-dot: rgba(247, 248, 252, 0.3);
+  }
+  .dark {
+    --bg: #0b0f1b;
+    --surface: #121828;
+    --ink: #f4f6ff;
+    --muted: #aab3c7;
+    --line: #273044;
+    --primary: #7ca0ff;
+    --violet: #aa8cff;
+    --tint: #181f36;
+    --deep-bg: #111525;
+    --deep-ink: #f7f8fc;
+    --deep-dot: rgba(247, 248, 252, 0.3);
+  }
   * {
     box-sizing: border-box;
   }
@@ -16,80 +43,9 @@
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    cursor: none;
-  }
-
-  a,
-  button,
-  input,
-  textarea,
-  select,
-  [role="button"],
-  [data-cursor="pointer"] {
-    cursor: none;
-  }
-
-  .custom-cursor {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    pointer-events: none;
-    opacity: 0;
-    transform: translate3d(-50%, -50%, 0);
-    transition: opacity 0.12s ease;
-    mix-blend-mode: difference;
-  }
-
-  .custom-cursor.is-visible {
-    opacity: 1;
-  }
-
-  .custom-cursor__dot {
-    display: block;
-    width: 18px;
-    height: 18px;
-    border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 0 0 1px rgba(17, 21, 37, 0.14), 0 10px 28px rgba(17, 21, 37, 0.14);
-    transform: translate(-50%, -50%);
-    transition: width 0.06s ease, height 0.06s ease, background 0.06s ease, box-shadow 0.06s ease;
-  }
-
-  .custom-cursor.is-active .custom-cursor__dot {
-    width: 38px;
-    height: 38px;
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45), 0 12px 30px rgba(17, 21, 37, 0.18);
   }
 }
 @layer utilities {
-  .site {
-    --bg: #f7f8fc;
-    --surface: #fff;
-    --ink: #111525;
-    --muted: #697084;
-    --line: #e4e7ef;
-    --primary: #2955d9;
-    --violet: #7253e7;
-    --tint: #f0f3ff;
-    --deep-bg: #111525;
-    --deep-ink: #f7f8fc;
-    --deep-dot: rgba(247, 248, 252, 0.3);
-  }
-  .site.dark {
-    --bg: #0b0f1b;
-    --surface: #121828;
-    --ink: #f4f6ff;
-    --muted: #aab3c7;
-    --line: #273044;
-    --primary: #7ca0ff;
-    --violet: #aa8cff;
-    --tint: #181f36;
-    --deep-bg: #111525;
-    --deep-ink: #f7f8fc;
-    --deep-dot: rgba(247, 248, 252, 0.3);
-  }
   .portrait-image {
     background-image:
       linear-gradient(0deg, rgba(17, 21, 37, 0.18), rgba(17, 21, 37, 0.05)),

@@ -38,6 +38,37 @@ export async function POST(request: NextRequest) {
       { $setOnInsert: { name: input.name, email: input.email, company: "", title: "", source: "Website", stage: "new", tags: ["website"], notes: input.message, createdAt: now }, $set: { updatedAt: now, lastContactAt: now, lastInterest: input.interest, lastInquiry: input.message }, $push: { contactSubmissions: { $each: [submission], $slice: -20 } } },
       { upsert: true },
     );
+
+    // Send email notification via Mailgun
+    const mailgunDomain = process.env.MAILGUN_DOMAIN;
+    const mailgunApiKey = process.env.MAILGUN_API_KEY;
+    const mailgunFrom = process.env.MAILGUN_FROM_EMAIL || `noreply@${mailgunDomain}`;
+    
+    if (mailgunDomain && mailgunApiKey) {
+      const formData = new URLSearchParams();
+      formData.append("from", `ArticulateX System <${mailgunFrom}>`);
+      formData.append("to", "harshit@articulatex.in");
+      formData.append("subject", `New Lead/Inquiry: ${input.interest} from ${input.name}`);
+      formData.append("text", `Name: ${input.name}\nEmail: ${input.email}\nInterest: ${input.interest}\n\nMessage:\n${input.message}`);
+      
+      try {
+        const mailRes = await fetch(`https://api.mailgun.net/v3/${mailgunDomain}/messages`, {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${Buffer.from(`api:${mailgunApiKey}`).toString("base64")}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: formData.toString(),
+        });
+        
+        if (!mailRes.ok) {
+          console.error("Mailgun error:", await mailRes.text());
+        }
+      } catch (mailErr) {
+        console.error("Failed to send email:", mailErr);
+      }
+    }
+
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) return NextResponse.json({ error: "Please complete every field with valid details." }, { status: 400 });

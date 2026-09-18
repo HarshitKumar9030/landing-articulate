@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowUpRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "./reveal"; 
@@ -80,6 +81,7 @@ const cardRevealProfiles = [
 // ----------------------------------------------------------------------
 export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
   const [activeCard, setActiveCard] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (activeCard !== null) {
@@ -267,7 +269,7 @@ export function Programs({ onContactOpen }: { onContactOpen: () => void }) {
                     </p>
 
                     <button 
-                      onClick={() => { setActiveCard(null); setTimeout(onContactOpen, 500); }}
+                      onClick={() => { setActiveCard(null); router.push('/onboarding'); }}
                       className="group mt-12 inline-flex items-center gap-3 font-mono text-[12px] font-medium uppercase tracking-[0.15em] text-white transition-opacity hover:opacity-70"
                     >
                       {APP_CONTENT.programs.detailCta}

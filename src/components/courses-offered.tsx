@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Clock3, X, ArrowRight } from "lucide-react";
 import { APP_CONTENT } from "@/constants";
@@ -16,16 +17,17 @@ const bentoLayout = [
 ];
 
 // Pure, flat, high-contrast colors
-const cardTone: Record<string, { bg: string; text: string; muted: string }> = {
+const cardTone: Record<string, { bg: string; text: string; muted: string; expandedBg?: string }> = {
   signal: { bg: "bg-[#FF3300]", text: "text-white", muted: "text-white/70" },
   violet: { bg: "bg-[#4A00FF]", text: "text-white", muted: "text-white/70" },
   ink: { bg: "bg-[var(--ink)]", text: "text-[var(--bg)]", muted: "text-[var(--bg)]/70" },
-  tint: { bg: "bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)]", text: "text-[var(--ink)]", muted: "text-[var(--ink)]/60" },
-  line: { bg: "bg-transparent ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]", text: "text-[var(--ink)]", muted: "text-[var(--ink)]/60" },
+  tint: { bg: "bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)]", text: "text-[var(--ink)]", muted: "text-[var(--ink)]/60", expandedBg: "bg-[color:color-mix(in_srgb,var(--ink)_4%,var(--bg))]" },
+  line: { bg: "bg-transparent ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]", text: "text-[var(--ink)]", muted: "text-[var(--ink)]/60", expandedBg: "bg-[var(--bg)] ring-1 ring-inset ring-[color:color-mix(in_srgb,var(--ink)_15%,transparent)]" },
 };
 
 export function CoursesOffered({ onContactOpen }: { onContactOpen: () => void }) {
   const [activeCourse, setActiveCourse] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (activeCourse !== null) {
@@ -178,7 +180,7 @@ export function CoursesOffered({ onContactOpen }: { onContactOpen: () => void })
                 <motion.div
                   layoutId={`course-card-${activeCourse}`}
                   onClick={(e) => e.stopPropagation()}
-                  className={`relative flex h-full max-h-[800px] w-full max-w-[1000px] flex-col overflow-hidden rounded-[2rem] sm:rounded-[3rem] ${theme.bg} ${theme.text}`}
+                  className={`relative flex h-full max-h-[800px] w-full max-w-[1000px] flex-col overflow-hidden rounded-[2rem] sm:rounded-[3rem] ${theme.expandedBg || theme.bg} ${theme.text}`}
                 >
                   {/* Decorative Hollow Background inside Modal */}
                   <div className="pointer-events-none absolute -bottom-[10%] -right-[5%] select-none font-sans text-[clamp(200px,25vw,400px)] font-bold leading-none tracking-tighter text-transparent opacity-10 [-webkit-text-stroke:2px_currentColor]">
@@ -225,7 +227,7 @@ export function CoursesOffered({ onContactOpen }: { onContactOpen: () => void })
 
                       <div className="mt-12 flex flex-wrap gap-4">
                         <button 
-                          onClick={() => { setActiveCourse(null); setTimeout(onContactOpen, 400); }}
+                          onClick={() => { setActiveCourse(null); router.push('/onboarding'); }}
                           className={`group flex h-14 items-center gap-3 rounded-full bg-[color:color-mix(in_srgb,currentColor_10%,transparent)] px-8 font-sans text-[14px] font-semibold transition-colors hover:bg-currentColor hover:text-[var(--bg)]`}
                         >
                           Enroll in {course.code}
