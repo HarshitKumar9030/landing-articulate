@@ -12,7 +12,7 @@ export const APP_CONTENT = {
   hero: {
     location: "Mumbai · Worldwide", intro: "Courses · Individual coaching · Team workshops",
     headlineLead: "Public speaking", headlineAccent: "coaching.",
-    description: "For professionals, founders and teams. Practise pitches, presentations and everyday conversations with live coaching and personal feedback.",
+    description: "For professionals, founders and teams. Get live coaching and personal feedback for your next pitch, presentation or conversation.",
     exploreMethod: "Explore courses", watchIntroduction: "Watch Introduction",
     videoTitleBefore: "Scroll down to unpack", videoTitleAccent: "the method.",
   },

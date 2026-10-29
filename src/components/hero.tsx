@@ -110,7 +110,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
     <>
       <section
         id="top"
-        className="relative isolate flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-36 text-center md:pb-16 md:pt-40"
+        className="relative isolate flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-14 pt-28 text-center sm:pb-16 sm:pt-32"
       >
         <CloudShader
           speed={0.8}
@@ -197,7 +197,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative z-10 mb-5 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] backdrop-blur-sm ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-6 md:text-[13px]"
+          className="relative z-10 mb-5 flex items-center justify-center gap-2 font-sans text-[11px] font-medium tracking-[.04em] text-[var(--muted)] sm:mb-6"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--ink)] opacity-40"></span>
@@ -207,9 +207,9 @@ export function Hero({ orbit, dark = false }: HeroProps) {
         </motion.div>
 
         {/* Main Headline */}
-        <div className="relative z-10 flex max-w-[900px] flex-col items-center">
+        <div className="relative z-10 flex w-full max-w-[960px] flex-col items-center">
           <motion.div
-            className="mb-3 font-sans text-[15px] font-medium tracking-tight text-[var(--muted)] sm:text-lg md:mb-4 md:text-xl"
+            className="mb-5 max-w-[290px] font-sans text-[12px] font-medium leading-5 tracking-normal text-[var(--muted)] sm:max-w-none sm:text-[13px]"
             initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ delay: 0.1, duration: 0.8 }}
@@ -218,13 +218,13 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           </motion.div>
 
           <motion.h1
-            className="relative m-0 font-sans text-[clamp(46px,6.5vw,94px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
+            className="relative m-0 font-[family-name:var(--font-sans)] text-[clamp(42px,6.4vw,88px)] font-medium leading-[1.04] tracking-[-.055em] text-[var(--ink)]"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
             <span className="block sm:whitespace-nowrap">{APP_CONTENT.hero.headlineLead}</span>
-            <span className="relative inline-block whitespace-nowrap font-serif font-normal italic text-[var(--primary)]">
+            <span className="relative mt-0.5 block whitespace-nowrap text-[var(--primary)]">
               {APP_CONTENT.hero.headlineAccent}
             </span>
           </motion.h1>
@@ -233,7 +233,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="mt-5 max-w-[540px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:mt-6 md:text-[16px]"
+            className="mt-6 max-w-[480px] text-balance font-sans text-[15px] leading-[1.7] tracking-normal text-[var(--muted)] sm:mt-7 sm:text-[16px]"
           >
             {APP_CONTENT.hero.description}
           </motion.p>
@@ -244,7 +244,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="relative z-10 mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-7 md:gap-4"
+          className="relative z-10 mt-7 flex w-full max-w-[420px] flex-col items-center justify-center gap-3 sm:mt-8 sm:max-w-none sm:flex-row"
         >
           <a
             href="#courses"

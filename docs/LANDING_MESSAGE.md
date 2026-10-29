@@ -16,7 +16,7 @@ Start the local MongoDB service with `brew services start mongodb-community@8.0`
 
 ## Motion and official Aceternity components
 
-The hero keeps the business headline on two lines, with a serif accent for coaching. Aceternity's Text Generate Effect reveals the short service label; the description remains immediately readable. Custom aircraft tow SVG message banners.
+The hero keeps the business headline on two lines, using one consistent sans-serif font, with a colour accent for coaching. Spacing is reduced around the service label and the headline uses a more open line height. Aceternity's Text Generate Effect reveals the short service label; the description remains immediately readable. Custom aircraft tow SVG message banners.
 
 A separate dark card uses Aceternity's GitHub Globe with dotted country polygons, animated arcs and rings. Routes are illustrative connections, not claims about customer locations. The globe never appears inside the hero.
 
