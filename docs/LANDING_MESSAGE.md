@@ -13,3 +13,9 @@ The existing sections, typography, colours, animation and layout are preserved. 
 Development uses `mongodb://127.0.0.1:27017/articulatex` when MONGODB_URI is absent. An explicitly configured URI takes precedence. Production still requires MONGODB_URI and retains the Vercel configuration. No environment file was created or downloaded.
 
 Start the local MongoDB service with `brew services start mongodb-community@8.0`, then run `pnpm dev`. Stop the service with `brew services stop mongodb-community@8.0` when no longer needed.
+
+## Motion and globe section
+
+The hero uses a two-line headline and smaller typography so its actions remain visible. Two aircraft tow SVG message banners. The globe appears in its own section after the ticker, accompanied by speaking-focused copy and a course link.
+
+The globe component is sourced from Aceternity UI: https://ui.aceternity.com/components/3d-globe and https://ui.aceternity.com/registry/3d-globe.json. Earth textures are vendored locally from three-globe 2.31.0 example images (earth-blue-marble.jpg and earth-topology.png). SVG orbit accents and aircraft banners are custom. Native reduced-motion preferences disable flight, banner and orbit animation and globe auto-rotation.

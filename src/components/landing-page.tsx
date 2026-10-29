@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
 import { usePalette } from "./theme-provider";
+import { GlobalReach } from "./global-reach";
 import { Hero } from "./hero";
 import { Manifesto } from "./manifesto";
 import { Programs } from "./programs";
@@ -95,6 +96,7 @@ export function LandingPage() {
       
       <Hero orbit={orbit} dark={dark} />
       <Ticker />
+      <GlobalReach />
       <FocusAreas onContactOpen={openContact} />
       <Manifesto />
       <AboutUs />

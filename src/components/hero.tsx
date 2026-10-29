@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { MotionValue, Transition } from "framer-motion";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowRight, Play, X } from "lucide-react";
 import { APP_CONTENT } from "@/constants";
 import { MacbookScroll } from "@/components/ui/macbook";
@@ -35,7 +35,7 @@ const FLIGHT_PATHS = [
     // Primary mid-altitude pass (Left to Right)
     animate: {
       x: ["-20vw", "30vw", "75vw", "120vw"],
-      y: ["40vh", "5vh", "-10vh", "30vh"],
+      y: ["27vh", "20vh", "18vh", "28vh"],
       // Banking up, leveling out, then banking down
       rotate: [-20, -15, 0, 25],
       scale: [0.5, 1.2, 0.8, 0.4],
@@ -63,7 +63,7 @@ const FLIGHT_PATHS = [
     // Fast, low-altitude pass (Left to Right)
     animate: {
       x: ["-20vw", "40vw", "80vw", "120vw"],
-      y: ["70vh", "60vh", "50vh", "30vh"],
+      y: ["88vh", "83vh", "87vh", "80vh"],
       // Consistently banking upward
       rotate: [-10, -15, -20, -25],
       scale: [0.8, 1.5, 1.2, 0.7],
@@ -77,7 +77,7 @@ const FLIGHT_PATHS = [
     // Steep descent (Right to Left)
     animate: {
       x: ["120vw", "60vw", "10vw", "-20vw"],
-      y: ["10vh", "40vh", "60vh", "80vh"],
+      y: ["12vh", "17vh", "24vh", "18vh"],
       // Pointing left (180deg) and angled heavily downward
       rotate: [160, 155, 150, 145],
       scale: [0.4, 0.8, 1.1, 0.6],
@@ -89,6 +89,7 @@ const FLIGHT_PATHS = [
 ];
 
 export function Hero({ orbit, dark = false }: HeroProps) {
+  const reducedMotion = useReducedMotion();
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
 
@@ -108,7 +109,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
     <>
       <section
         id="top"
-        className="relative isolate flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-24 text-center md:pb-12 md:pt-32"
+        className="relative isolate flex min-h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-[clamp(20px,5vw,80px)] pb-16 pt-36 text-center md:pb-16 md:pt-40"
       >
         <CloudShader
           speed={0.8}
@@ -125,7 +126,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, delay: Math.random() * 0.5, ease: "easeOut" }}
+              transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
               key={city.name}
               className="absolute flex items-center gap-2 font-mono text-[9px] font-medium uppercase tracking-[0.15em] text-[color:color-mix(in_srgb,var(--ink)_60%,transparent)] sm:text-[10px]"
               style={{ top: city.top, bottom: city.bottom, left: city.left, right: city.right }}
@@ -155,9 +156,9 @@ export function Hero({ orbit, dark = false }: HeroProps) {
         {FLIGHT_PATHS.map((flight) => (
           <motion.div
             key={flight.id}
-            animate={flight.animate}
+            animate={reducedMotion ? { opacity: 0 } : flight.animate}
             transition={flight.transition}
-            className={`pointer-events-auto absolute left-0 top-0 text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)] ${flight.className}`}
+            className={`pointer-events-none absolute left-0 top-0 text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)] ${flight.className}`}
           >
             {/* Inner div handles the hover scaling without breaking the flight path physics */}
             <motion.div
@@ -171,10 +172,19 @@ export function Hero({ orbit, dark = false }: HeroProps) {
               tabIndex={0}
               aria-label="Open Fly the message game"
               onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setIsGameOpen(true); } }}
-              className="h-full w-full"
+              className="pointer-events-auto relative h-full w-full"
             >
+              {(flight.id === "flight-1" || flight.id === "flight-3") && (
+                <svg aria-hidden="true" viewBox="0 0 230 52" className="absolute right-[85%] top-1/2 h-auto w-[240%] -translate-y-1/2 overflow-visible text-[var(--ink)]">
+                  <path d="M190 26 Q207 18 230 26" fill="none" stroke="currentColor" strokeWidth="1" strokeOpacity=".4" />
+                  <g className="hero-plane-banner">
+                    <path d="M0 8 Q48 0 95 8 T190 8 V44 Q142 36 95 44 T0 44 L10 26 Z" fill="var(--bg)" fillOpacity=".9" stroke="currentColor" strokeOpacity=".12" />
+                    <text x="99" y="29" textAnchor="middle" fill="currentColor" className="font-sans" fontSize="11" fontWeight="600" letterSpacing=".4">{flight.id === "flight-1" ? "Find your voice." : "Ideas deserve to be heard."}</text>
+                  </g>
+                </svg>
+              )}
               {/* Perfect top-down silhouette. Natively points Right (0deg). */}
-              <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+              <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="pointer-events-auto relative h-full w-full">
                 <path d="M 21.9 11.1 L 16.5 11.1 L 11 2 L 8 2 L 12 11.1 L 5 11.1 L 2.5 8 L 1.5 8 L 3 12 L 1.5 16 L 2.5 16 L 5 12.9 L 12 12.9 L 8 22 L 11 22 L 16.5 12.9 L 21.9 12.9 C 23.1 12.9 24 12.5 24 12 C 24 11.5 23.1 11.1 21.9 11.1 Z" />
               </svg>
             </motion.div>
@@ -186,7 +196,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-6 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] backdrop-blur-sm ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-8 md:text-[13px]"
+          className="relative z-10 mb-5 flex items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 font-sans text-[12px] font-medium tracking-tight text-[var(--ink)] backdrop-blur-sm ring-1 ring-[color:color-mix(in_srgb,var(--ink)_6%,transparent)] md:mb-6 md:text-[13px]"
         >
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--ink)] opacity-40"></span>
@@ -207,12 +217,12 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           </motion.p>
 
           <motion.h1
-            className="relative m-0 font-sans text-[clamp(40px,11vw,140px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
+            className="relative m-0 font-sans text-[clamp(46px,7.2vw,104px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            {APP_CONTENT.hero.headlineLead}{" "}
+            <span className="block sm:whitespace-nowrap">{APP_CONTENT.hero.headlineLead}</span>
             <span className="relative inline-block whitespace-nowrap">
               {APP_CONTENT.hero.headlineAccent}
             </span>
@@ -222,7 +232,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-            className="mt-6 max-w-[500px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:mt-8 md:text-[17px]"
+            className="mt-5 max-w-[540px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:mt-6 md:text-[16px]"
           >
             {APP_CONTENT.hero.description}
           </motion.p>
@@ -233,7 +243,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="relative z-10 mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-10 md:gap-4"
+          className="relative z-10 mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-7 md:gap-4"
         >
           <a
             href="#courses"
@@ -251,6 +261,11 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             Watch Introduction
           </button>
         </motion.div>
+        <svg aria-hidden="true" viewBox="0 0 140 80" className="pointer-events-none absolute bottom-[15%] left-[5%] hidden w-32 text-[var(--ink)] opacity-35 lg:block" fill="none">
+          <path className="hero-message-line" d="M10 60 Q10 15 50 30 T130 15" stroke="currentColor" strokeWidth="1" strokeDasharray="4 6" />
+          <g className="hero-plane-banner"><path d="M104 9 L132 13 L115 31 L116 19 Z" stroke="currentColor" strokeWidth="1.4" /><path d="M116 19 L132 13" stroke="currentColor" /></g>
+          <text x="10" y="78" fill="currentColor" className="font-mono" fontSize="8" letterSpacing="1.5">LET YOUR IDEAS TRAVEL</text>
+        </svg>
       </section>
 
       <PlaneGame open={isGameOpen} onClose={() => setIsGameOpen(false)} />

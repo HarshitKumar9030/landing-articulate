@@ -156,3 +156,14 @@ html[data-high-contrast="true"] .site {
   --deep-ink: #ffffff;
   --deep-dot: #ffffff;
 }
+
+/* Hero aircraft cloth, message trail and communications orbit. */
+.hero-plane-banner { transform-origin: 95% 50%; animation: hero-banner-wave 3s ease-in-out infinite; }
+.hero-message-line { animation: hero-route-dash 12s linear infinite; }
+.hero-orbit-dot { transform-origin: 115px 115px; animation: hero-orbit 24s linear infinite; }
+@keyframes hero-banner-wave { 0%, 100% { transform: skewY(-2deg) translateY(-1px); } 50% { transform: skewY(2deg) translateY(2px); } }
+@keyframes hero-route-dash { to { stroke-dashoffset: -100; } }
+@keyframes hero-orbit { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane-banner, .hero-message-line, .hero-orbit-dot { animation: none; }
+}
