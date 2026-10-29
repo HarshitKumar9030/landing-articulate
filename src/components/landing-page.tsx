@@ -21,7 +21,6 @@ import { MethodSection } from "./method-section";
 import { ConversationCta } from "./conversation-cta";
 import { EntryLoader } from "./entry-loader";
 import { PaletteStudio } from "./palette-studio";
-import { AboutUs } from "./about-us";
 import { CoursesOffered } from "./courses-offered";
 import { Testimonials } from "./testimonials";
 import { track } from "@vercel/analytics";
@@ -99,7 +98,6 @@ export function LandingPage() {
       <GlobalReach />
       <FocusAreas onContactOpen={openContact} />
       <Manifesto />
-      <AboutUs />
       <MethodSection />
       <CoursesOffered onContactOpen={openContact} />
       <Programs onContactOpen={openContact} />

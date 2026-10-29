@@ -40,4 +40,4 @@ The global reach section follows Focus Areas and Method: the same horizontal gut
 
 Dark mode uses a brighter tinted globe material and brighter country dots against a distinct surface, while the heading accent retains enough contrast. The hero uses a darker sky, subdued clouds and an edge overlay so the white headline remains legible. These changes preserve the light palette and square camera frame.
 
-The founder profiles and their biographies have been removed from the public team section at the owner’s request. The Creative Director profile remains.
+The entire “The architects of articulation” team section has been removed from the landing page at the owner’s request.
