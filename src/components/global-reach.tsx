@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useTheme } from "next-themes";
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
@@ -16,6 +17,8 @@ const destinations = [
 
 export function GlobalReach() {
   const reduced = useReducedMotion();
+  const { resolvedTheme } = useTheme();
+  const dark = resolvedTheme === "dark";
   const { activeTokens, palette } = usePalette();
   const routes = useMemo(() => reduced ? [] : destinations.map((place, index) => ({
     order: index + 1, startLat: 19.076, startLng: 72.8777,
@@ -23,13 +26,13 @@ export function GlobalReach() {
     color: index % 2 ? activeTokens["--violet"] : activeTokens["--primary"],
   })), [activeTokens, reduced]);
   const config = useMemo(() => ({
-    globeColor: palette.dark["--bg"], polygonColor: palette.dark["--muted"],
-    emissive: palette.dark["--bg"], emissiveIntensity: .5, shininess: .1,
-    showAtmosphere: true, atmosphereColor: activeTokens["--primary"], atmosphereAltitude: .11,
+    globeColor: dark ? palette.dark["--tint"] : palette.dark["--bg"], polygonColor: dark ? palette.dark["--ink"] : palette.dark["--muted"],
+    emissive: dark ? palette.dark["--tint"] : palette.dark["--bg"], emissiveIntensity: dark ? .9 : .5, shininess: .1,
+    showAtmosphere: true, atmosphereColor: activeTokens["--primary"], atmosphereAltitude: dark ? .08 : .11,
     ambientLight: "#ffffff", directionalLeftLight: "#ffffff", directionalTopLight: "#ffffff",
     pointLight: activeTokens["--primary"], pointSize: 1.2, arcTime: 2600,
     arcLength: .7, rings: 1, maxRings: 2, autoRotate: !reduced, autoRotateSpeed: .25,
-  }), [activeTokens, palette.dark, reduced]);
+  }), [activeTokens, palette.dark, reduced, dark]);
 
   return (
     <section aria-labelledby="global-reach-heading" className="relative overflow-hidden bg-[var(--bg)] px-[clamp(24px,5vw,80px)] py-24 font-sans text-[var(--ink)] md:py-36">
@@ -39,14 +42,14 @@ export function GlobalReach() {
             <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-4 py-1.5 text-[13px] font-medium tracking-tight text-[var(--ink)]">
               Beyond the familiar
             </div>
-            <h2 id="global-reach-heading" className="m-0 font-sans text-[clamp(48px,6vw,86px)] font-semibold leading-[.95] tracking-tighter text-[var(--ink)]">Your voice.<br /><span className="text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)]">Everywhere.</span></h2>
+            <h2 id="global-reach-heading" className="m-0 font-sans text-[clamp(48px,6vw,86px)] font-semibold leading-[.95] tracking-tighter text-[var(--ink)]">Your voice.<br /><span className="text-[color:color-mix(in_srgb,var(--ink)_40%,transparent)] dark:text-[color:color-mix(in_srgb,var(--ink)_68%,transparent)]">Everywhere.</span></h2>
             <p className="mt-8 max-w-[360px] text-balance text-[16px] leading-relaxed text-[var(--muted)]">Practise the pitches, presentations and conversations that take you further. A new audience. The same clear voice.</p>
             <a href="#courses" className="group mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-6 text-[13px] font-medium text-[var(--bg)] transition-all duration-300 hover:scale-[1.02] active:scale-[.98]">
               Explore our courses
               <ArrowUpRight size={16} strokeWidth={2} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           </motion.div>
-          <div className="relative mx-auto aspect-square w-full max-w-[600px] min-w-0 overflow-hidden rounded-[2rem] bg-[color:color-mix(in_srgb,var(--ink)_3%,transparent)]">
+          <div className="relative mx-auto aspect-square w-full max-w-[600px] min-w-0 overflow-hidden rounded-[2rem] bg-[color:color-mix(in_srgb,var(--ink)_3%,transparent)] dark:bg-[var(--surface)]">
             <div aria-label="Animated globe illustrating connections from Mumbai" role="img" className="absolute inset-3 sm:inset-5">
               <World data={routes} globeConfig={config} />
             </div>
@@ -56,7 +59,7 @@ export function GlobalReach() {
               <circle cx="181" cy="366" r="3" fill="currentColor" />
             </svg>
             <div className="pointer-events-none absolute bottom-[27%] left-4 rounded-full bg-[var(--surface)] px-4 py-2.5 text-[12px] font-medium tracking-tight text-[var(--ink)] sm:left-7">Mumbai · Worldwide</div>
-            <p className="absolute bottom-6 left-0 right-0 text-center text-[11px] text-[var(--muted)]">Drag to explore · Illustrative connections</p>
+            <p className="absolute bottom-6 left-0 right-0 text-center text-[11px] text-[var(--muted)] dark:text-[color:color-mix(in_srgb,var(--ink)_72%,transparent)]">Drag to explore · Illustrative connections</p>
           </div>
         </div>
       </div>

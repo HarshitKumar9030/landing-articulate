@@ -115,11 +115,13 @@ export function Hero({ orbit, dark = false }: HeroProps) {
         <CloudShader
           speed={0.8}
           count={4}
-          cloudColor={dark ? "#dce8ed" : "#fff7e8"}
-          skyTopColor={dark ? "#17263b" : "#b7d3f2"}
-          skyBottomColor={dark ? "#3f6178" : "#f4c3a4"}
+          cloudColor={dark ? "#546681" : "#fff7e8"}
+          skyTopColor={dark ? "#0b1020" : "#b7d3f2"}
+          skyBottomColor={dark ? "#18243a" : "#f4c3a4"}
           className="pointer-events-none absolute inset-0 z-0 opacity-85"
         />
+
+        {dark && <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_50%_45%,rgba(11,16,32,.08),rgba(11,16,32,.5))]" />}
 
         {/* Scattered Edge Pointers (Kept strictly to the periphery) */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2] opacity-70">
@@ -256,7 +258,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
 
           <button
             onClick={() => setIsVideoOpen(true)}
-            className="group flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] px-8 font-sans text-[14px] font-medium text-[var(--ink)] no-underline backdrop-blur-sm transition-all hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] active:scale-[0.98] sm:w-auto"
+            className="group flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[color:color-mix(in_srgb,var(--ink)_4%,transparent)] dark:bg-[color:color-mix(in_srgb,var(--ink)_10%,transparent)] px-8 font-sans text-[14px] font-medium text-[var(--ink)] no-underline backdrop-blur-sm transition-all hover:bg-[color:color-mix(in_srgb,var(--ink)_8%,transparent)] active:scale-[0.98] sm:w-auto"
           >
             <Play className="h-4 w-4 fill-current opacity-70 transition-opacity group-hover:opacity-100" />
             Watch Introduction

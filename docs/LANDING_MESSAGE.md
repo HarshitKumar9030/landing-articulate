@@ -35,3 +35,7 @@ The globe stays inside a square responsive frame. React Three Fiber owns rendere
 ## Visual consistency
 
 The global reach section follows Focus Areas and Method: the same horizontal gutters and vertical spacing, rounded eyebrow label, large sans-serif heading with muted accent text, restrained body width, soft 3% ink surface, 2rem stage corners and pill CTA. Technical coordinates and the extra numbered outcome row were removed. The responsive square globe frame and renderer-managed camera aspect are retained.
+
+## Dark mode
+
+Dark mode uses a brighter tinted globe material and brighter country dots against a distinct surface, while the heading accent retains enough contrast. The hero uses a darker sky, subdued clouds and an edge overlay so the white headline remains legible. These changes preserve the light palette and square camera frame.
