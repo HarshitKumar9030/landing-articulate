@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { MotionValue, Transition } from "framer-motion";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowRight, Play, X } from "lucide-react";
+import { TextGenerateEffect } from "./ui/text-generate-effect";
 import { APP_CONTENT } from "@/constants";
 import { MacbookScroll } from "@/components/ui/macbook";
 import { CloudShader } from "./cloud-shader";
@@ -207,23 +208,23 @@ export function Hero({ orbit, dark = false }: HeroProps) {
 
         {/* Main Headline */}
         <div className="relative z-10 flex max-w-[900px] flex-col items-center">
-          <motion.p
+          <motion.div
             className="mb-3 font-sans text-[15px] font-medium tracking-tight text-[var(--muted)] sm:text-lg md:mb-4 md:text-xl"
             initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ delay: 0.1, duration: 0.8 }}
           >
-            {APP_CONTENT.hero.intro}
-          </motion.p>
+            <TextGenerateEffect words={APP_CONTENT.hero.intro} duration={0.45} />
+          </motion.div>
 
           <motion.h1
-            className="relative m-0 font-sans text-[clamp(46px,7.2vw,104px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
+            className="relative m-0 font-sans text-[clamp(46px,6.5vw,94px)] font-semibold leading-[0.9] tracking-tighter text-[var(--ink)]"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
             <span className="block sm:whitespace-nowrap">{APP_CONTENT.hero.headlineLead}</span>
-            <span className="relative inline-block whitespace-nowrap">
+            <span className="relative inline-block whitespace-nowrap font-serif font-normal italic text-[var(--primary)]">
               {APP_CONTENT.hero.headlineAccent}
             </span>
           </motion.h1>
@@ -261,11 +262,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             Watch Introduction
           </button>
         </motion.div>
-        <svg aria-hidden="true" viewBox="0 0 140 80" className="pointer-events-none absolute bottom-[15%] left-[5%] hidden w-32 text-[var(--ink)] opacity-35 lg:block" fill="none">
-          <path className="hero-message-line" d="M10 60 Q10 15 50 30 T130 15" stroke="currentColor" strokeWidth="1" strokeDasharray="4 6" />
-          <g className="hero-plane-banner"><path d="M104 9 L132 13 L115 31 L116 19 Z" stroke="currentColor" strokeWidth="1.4" /><path d="M116 19 L132 13" stroke="currentColor" /></g>
-          <text x="10" y="78" fill="currentColor" className="font-mono" fontSize="8" letterSpacing="1.5">LET YOUR IDEAS TRAVEL</text>
-        </svg>
+
       </section>
 
       <PlaneGame open={isGameOpen} onClose={() => setIsGameOpen(false)} />

@@ -2,29 +2,32 @@
 
 import dynamic from "next/dynamic";
 import { useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
-const Globe = dynamic(() => import("./ui/3d-globe").then((module) => module.Globe3D), { ssr: false });
+const World = dynamic(() => import("./ui/globe").then((module) => module.World), { ssr: false });
+const routes = [
+  { order: 1, startLat: 19.076, startLng: 72.8777, endLat: 51.5072, endLng: -0.1276, arcAlt: .24, color: "#b7baff" },
+  { order: 2, startLat: 19.076, startLng: 72.8777, endLat: 35.6762, endLng: 139.6503, arcAlt: .2, color: "#92d8e6" },
+  { order: 3, startLat: 19.076, startLng: 72.8777, endLat: 40.7128, endLng: -74.006, arcAlt: .35, color: "#b7baff" },
+  { order: 4, startLat: 19.076, startLng: 72.8777, endLat: 1.3521, endLng: 103.8198, arcAlt: .15, color: "#92d8e6" },
+];
 
-/** Aceternity's 3D Globe with local textures and an SVG communications orbit. */
 export function GlobalReach() {
-  const reducedMotion = useReducedMotion();
+  const reduced = useReducedMotion();
   return (
-    <section aria-labelledby="global-reach-heading" className="relative overflow-hidden bg-[var(--bg)] px-[clamp(24px,5vw,80px)] py-16 md:py-24">
-      <div className="mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-2 lg:gap-20">
-        <div className="relative z-10">
-          <p className="mb-6 font-mono text-[11px] uppercase tracking-[.18em] text-[var(--muted)]">Mumbai · Worldwide</p>
-          <h2 id="global-reach-heading" className="max-w-xl font-sans text-balance text-[clamp(40px,5vw,72px)] font-semibold leading-[.98] tracking-tighter text-[var(--ink)]">Your ideas deserve<br /><span className="text-[var(--muted)]">a wider audience.</span></h2>
-          <p className="mt-7 max-w-md font-sans text-[16px] leading-relaxed text-[var(--muted)]">A pitch across the table. A presentation across time zones. Practise speaking clearly and connecting with the people listening.</p>
-          <a href="#courses" className="mt-8 inline-flex items-center gap-3 text-[14px] font-medium text-[var(--ink)] transition-transform hover:translate-x-1">Find your course <span aria-hidden="true">↗</span></a>
+    <section aria-labelledby="global-reach-heading" className="bg-[var(--bg)] px-5 py-16 md:px-12 md:py-24">
+      <div className="relative mx-auto grid max-w-7xl overflow-hidden rounded-[32px] bg-[#111525] text-[#f4f4ff] lg:min-h-[520px] lg:grid-cols-[1fr_1.15fr]">
+        <div className="relative z-10 flex flex-col items-start justify-center px-8 pt-12 sm:px-12 lg:py-16 lg:pl-16 lg:pr-0">
+          <p className="mb-8 font-mono text-[10px] uppercase tracking-[.22em] text-[#a6abc4]">Rooted in Mumbai. Ready for the world.</p>
+          <h2 id="global-reach-heading" className="max-w-md font-sans text-[clamp(38px,4.4vw,64px)] font-medium leading-[1.03] tracking-[-.05em]">New audience.<br /><span className="text-[#b7baff]">Same clear voice.</span></h2>
+          <p className="mt-6 max-w-[330px] font-sans text-[15px] leading-7 text-[#a6abc4]">From your first team presentation to your next investor pitch. Build a message you can deliver with confidence.</p>
+          <a href="#courses" className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#f4f4ff] px-6 py-3.5 font-sans text-[13px] font-medium text-[#111525] transition-colors hover:bg-[#b7baff]">Explore our courses <ArrowUpRight size={16} /></a>
         </div>
-        <div aria-hidden="true" className="pointer-events-none relative mx-auto aspect-square w-full max-w-[460px]">
-      <Globe className="!h-full" config={{ textureUrl: "/images/globe/earth.jpg", bumpMapUrl: "/images/globe/topology.png", bumpScale: 0.04, autoRotateSpeed: reducedMotion ? 0 : 0.55, globeColor: "#8aabd3", ambientIntensity: 1.3, pointLightIntensity: 1.2, initialRotation: { x: 0.1, y: 1.3 } }} />
-      <svg viewBox="0 0 230 230" className="absolute inset-0 h-full w-full overflow-visible text-[var(--ink)]" fill="none">
-        <ellipse cx="115" cy="115" rx="108" ry="38" transform="rotate(-25 115 115)" stroke="currentColor" strokeOpacity=".2" strokeDasharray="3 6" />
-        <g className="hero-orbit-dot"><circle cx="18" cy="157" r="4" fill="var(--primary)" /><circle cx="18" cy="157" r="9" stroke="var(--primary)" strokeOpacity=".25" /></g>
-        <path d="M160 183 L177 202 H220" stroke="currentColor" strokeOpacity=".35" />
-      </svg>
-      <p className="absolute bottom-2 right-2 font-mono text-[9px] uppercase tracking-[.15em] text-[var(--ink)]">Your voice. Worldwide.</p>
+        <div aria-hidden="true" className="relative h-[360px] sm:h-[460px] lg:h-full lg:min-h-[520px]">
+          <div className="absolute inset-x-[-12%] inset-y-0">
+            <World data={reduced ? [] : routes} globeConfig={{ globeColor: "#151c36", polygonColor: "rgba(179,190,231,0.65)", emissive: "#111525", emissiveIntensity: .4, shininess: .4, showAtmosphere: true, atmosphereColor: "#8699dd", atmosphereAltitude: .12, ambientLight: "#ffffff", directionalLeftLight: "#b7baff", directionalTopLight: "#ffffff", pointLight: "#92d8e6", pointSize: 1.5, arcTime: 2400, arcLength: .7, rings: 1, maxRings: 2, autoRotate: !reduced, autoRotateSpeed: .35 }} />
+          </div>
+          <div className="absolute bottom-7 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-[.2em] text-[#a6abc4]">Illustrating connection across borders</div>
         </div>
       </div>
     </section>

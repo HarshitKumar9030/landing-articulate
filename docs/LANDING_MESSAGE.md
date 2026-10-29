@@ -14,8 +14,16 @@ Development uses `mongodb://127.0.0.1:27017/articulatex` when MONGODB_URI is abs
 
 Start the local MongoDB service with `brew services start mongodb-community@8.0`, then run `pnpm dev`. Stop the service with `brew services stop mongodb-community@8.0` when no longer needed.
 
-## Motion and globe section
+## Motion and official Aceternity components
 
-The hero uses a two-line headline and smaller typography so its actions remain visible. Two aircraft tow SVG message banners. The globe appears in its own section after the ticker, accompanied by speaking-focused copy and a course link.
+The hero keeps the business headline on two lines, with a serif accent for coaching. Aceternity's Text Generate Effect reveals the short service label; the description remains immediately readable. Custom aircraft tow SVG message banners.
 
-The globe component is sourced from Aceternity UI: https://ui.aceternity.com/components/3d-globe and https://ui.aceternity.com/registry/3d-globe.json. Earth textures are vendored locally from three-globe 2.31.0 example images (earth-blue-marble.jpg and earth-topology.png). SVG orbit accents and aircraft banners are custom. Native reduced-motion preferences disable flight, banner and orbit animation and globe auto-rotation.
+A separate dark card uses Aceternity's GitHub Globe with dotted country polygons, animated arcs and rings. Routes are illustrative connections, not claims about customer locations. The globe never appears inside the hero.
+
+Sources:
+- https://ui.aceternity.com/components/github-globe
+- https://ui.aceternity.com/registry/globe.json
+- https://assets.aceternity.com/globe.json
+- https://ui.aceternity.com/registry/text-generate-effect.json
+
+The copied components are adapted for the existing palette, React 19 ref types and reduced motion. The stable installed React Three Fiber version is retained rather than adopting the registry's alpha dependency. Reduced motion disables globe rotation and routes and makes the service text reveal immediate.
