@@ -18,7 +18,7 @@ Start the local MongoDB service with `brew services start mongodb-community@8.0`
 
 The hero keeps the business headline on two lines, using one consistent sans-serif font, with a colour accent for coaching. Spacing is reduced around the service label and the headline uses a more open line height. Aceternity's Text Generate Effect reveals the short service label; the description remains immediately readable. Custom aircraft tow SVG message banners.
 
-A separate dark card uses Aceternity's GitHub Globe with dotted country polygons, animated arcs and rings. Routes are illustrative connections, not claims about customer locations. The globe never appears inside the hero.
+A separate open editorial section uses Aceternity's GitHub Globe with dotted country polygons, animated arcs and rings. Typography, annotation colours and globe lighting follow the selected palette. Routes are illustrative connections, not claims about customer locations. The globe never appears inside the hero.
 
 Sources:
 - https://ui.aceternity.com/components/github-globe
@@ -27,3 +27,7 @@ Sources:
 - https://ui.aceternity.com/registry/text-generate-effect.json
 
 The copied components are adapted for the existing palette, React 19 ref types and reduced motion. The stable installed React Three Fiber version is retained rather than adopting the registry's alpha dependency. Reduced motion disables globe rotation and routes and makes the service text reveal immediate.
+
+## Globe sizing
+
+The globe stays inside a square responsive frame. React Three Fiber owns renderer sizing and the perspective camera aspect ratio. Do not reintroduce a fixed camera aspect or manual renderer setSize calls: these distorted the sphere after theme-triggered rerenders. Camera and fog objects are no longer reconstructed during rendering.

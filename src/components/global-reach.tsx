@@ -1,33 +1,70 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useReducedMotion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { useMemo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, MoveUpRight } from "lucide-react";
+import { usePalette } from "./theme-provider";
 
 const World = dynamic(() => import("./ui/globe").then((module) => module.World), { ssr: false });
-const routes = [
-  { order: 1, startLat: 19.076, startLng: 72.8777, endLat: 51.5072, endLng: -0.1276, arcAlt: .24, color: "#b7baff" },
-  { order: 2, startLat: 19.076, startLng: 72.8777, endLat: 35.6762, endLng: 139.6503, arcAlt: .2, color: "#92d8e6" },
-  { order: 3, startLat: 19.076, startLng: 72.8777, endLat: 40.7128, endLng: -74.006, arcAlt: .35, color: "#b7baff" },
-  { order: 4, startLat: 19.076, startLng: 72.8777, endLat: 1.3521, endLng: 103.8198, arcAlt: .15, color: "#92d8e6" },
+const destinations = [
+  { lat: 51.5072, lng: -0.1276, altitude: .24 },
+  { lat: 35.6762, lng: 139.6503, altitude: .2 },
+  { lat: 40.7128, lng: -74.006, altitude: .35 },
+  { lat: 1.3521, lng: 103.8198, altitude: .15 },
 ];
 
 export function GlobalReach() {
   const reduced = useReducedMotion();
+  const { activeTokens, palette } = usePalette();
+  const routes = useMemo(() => reduced ? [] : destinations.map((place, index) => ({
+    order: index + 1, startLat: 19.076, startLng: 72.8777,
+    endLat: place.lat, endLng: place.lng, arcAlt: place.altitude,
+    color: index % 2 ? activeTokens["--violet"] : activeTokens["--primary"],
+  })), [activeTokens, reduced]);
+  const config = useMemo(() => ({
+    globeColor: palette.dark["--bg"], polygonColor: palette.dark["--muted"],
+    emissive: palette.dark["--bg"], emissiveIntensity: .5, shininess: .1,
+    showAtmosphere: true, atmosphereColor: activeTokens["--primary"], atmosphereAltitude: .11,
+    ambientLight: "#ffffff", directionalLeftLight: "#ffffff", directionalTopLight: "#ffffff",
+    pointLight: activeTokens["--primary"], pointSize: 1.2, arcTime: 2600,
+    arcLength: .7, rings: 1, maxRings: 2, autoRotate: !reduced, autoRotateSpeed: .25,
+  }), [activeTokens, palette.dark, reduced]);
+
   return (
-    <section aria-labelledby="global-reach-heading" className="bg-[var(--bg)] px-5 py-16 md:px-12 md:py-24">
-      <div className="relative mx-auto grid max-w-7xl overflow-hidden rounded-[32px] bg-[#111525] text-[#f4f4ff] lg:min-h-[520px] lg:grid-cols-[1fr_1.15fr]">
-        <div className="relative z-10 flex flex-col items-start justify-center px-8 pt-12 sm:px-12 lg:py-16 lg:pl-16 lg:pr-0">
-          <p className="mb-8 font-mono text-[10px] uppercase tracking-[.22em] text-[#a6abc4]">Rooted in Mumbai. Ready for the world.</p>
-          <h2 id="global-reach-heading" className="max-w-md font-sans text-[clamp(38px,4.4vw,64px)] font-medium leading-[1.03] tracking-[-.05em]">New audience.<br /><span className="text-[#b7baff]">Same clear voice.</span></h2>
-          <p className="mt-6 max-w-[330px] font-sans text-[15px] leading-7 text-[#a6abc4]">From your first team presentation to your next investor pitch. Build a message you can deliver with confidence.</p>
-          <a href="#courses" className="mt-8 inline-flex items-center gap-3 rounded-full bg-[#f4f4ff] px-6 py-3.5 font-sans text-[13px] font-medium text-[#111525] transition-colors hover:bg-[#b7baff]">Explore our courses <ArrowUpRight size={16} /></a>
+    <section aria-labelledby="global-reach-heading" className="relative overflow-hidden bg-[var(--bg)] px-6 py-20 font-sans text-[var(--ink)] sm:px-12 lg:py-28">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[.16em] text-[var(--muted)]">
+          <span className="flex items-center gap-3"><span className="h-1.5 w-1.5 rounded-full bg-[var(--primary)]" /> Beyond the familiar</span>
+          <span className="hidden sm:block">19.0760° N &nbsp; 72.8777° E</span>
         </div>
-        <div aria-hidden="true" className="relative h-[360px] sm:h-[460px] lg:h-full lg:min-h-[520px]">
-          <div className="absolute inset-x-[-12%] inset-y-0">
-            <World data={reduced ? [] : routes} globeConfig={{ globeColor: "#151c36", polygonColor: "rgba(179,190,231,0.65)", emissive: "#111525", emissiveIntensity: .4, shininess: .4, showAtmosphere: true, atmosphereColor: "#8699dd", atmosphereAltitude: .12, ambientLight: "#ffffff", directionalLeftLight: "#b7baff", directionalTopLight: "#ffffff", pointLight: "#92d8e6", pointSize: 1.5, arcTime: 2400, arcLength: .7, rings: 1, maxRings: 2, autoRotate: !reduced, autoRotateSpeed: .35 }} />
+        <div className="relative mt-10 grid items-center lg:mt-6 lg:grid-cols-[1fr_1.1fr]">
+          <motion.div initial={reduced ? false : { opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: .65 }} className="relative z-10 pb-8 lg:py-12">
+            <h2 id="global-reach-heading" className="font-sans text-[clamp(44px,5.8vw,82px)] font-medium leading-[1.02] tracking-[-.06em]">Your voice,<br /><span className="text-[var(--primary)]">without<br className="hidden lg:block" /> borders.</span></h2>
+            <p className="mt-7 max-w-[330px] text-[15px] leading-7 text-[var(--muted)]">The room changes. Your confidence stays.<br />Practise the pitches, presentations and conversations that take you further.</p>
+            <a href="#courses" className="group mt-8 inline-flex items-center gap-4 text-[14px] font-medium">
+              Find your next step
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--ink)] text-[var(--bg)] transition-transform duration-300 group-hover:rotate-45"><ArrowUpRight size={18} /></span>
+            </a>
+          </motion.div>
+          <div className="relative mx-auto aspect-square w-full max-w-[600px] min-w-0">
+            <div aria-label="Animated globe illustrating connections from Mumbai" role="img" className="absolute inset-0">
+              <World data={routes} globeConfig={config} />
+            </div>
+            <svg aria-hidden="true" viewBox="0 0 600 600" fill="none" className="pointer-events-none absolute inset-0 h-full w-full text-[var(--primary)]">
+              <circle cx="300" cy="300" r="263" stroke="currentColor" strokeOpacity=".13" strokeDasharray="2 9" />
+              <path d="M70 417 H130 L181 366" stroke="currentColor" strokeOpacity=".55" />
+              <circle cx="181" cy="366" r="3" fill="currentColor" />
+              <path d="M500 125 H532 M516 109 V141" stroke="currentColor" strokeOpacity=".5" />
+            </svg>
+            <div className="pointer-events-none absolute bottom-[27%] left-0 rounded-full bg-[var(--surface)] px-4 py-2.5 text-[11px] font-medium text-[var(--ink)]">Made in Mumbai <span className="ml-2 text-[var(--primary)]">↗</span></div>
+            <p className="absolute bottom-0 right-2 font-mono text-[9px] uppercase tracking-[.12em] text-[var(--muted)]">Illustrative connections / Drag to explore</p>
           </div>
-          <div className="absolute bottom-7 left-0 right-0 text-center font-mono text-[9px] uppercase tracking-[.2em] text-[#a6abc4]">Illustrating connection across borders</div>
+        </div>
+        <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-4 text-[12px] text-[var(--muted)] lg:mt-3">
+          {["A clearer pitch", "A stronger presentation", "A conversation that connects"].map((label, index) => (
+            <span key={label} className="flex items-center gap-3"><span className="font-mono text-[9px] opacity-60">0{index + 1}</span>{label}<MoveUpRight size={12} className="text-[var(--primary)]" /></span>
+          ))}
         </div>
       </div>
     </section>
