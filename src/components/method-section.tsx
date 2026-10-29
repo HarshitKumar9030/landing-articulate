@@ -10,19 +10,19 @@ const steps = [
     number: "01",
     title: "Find the signal",
     copy: "We reduce the noise and name the one thing your audience should remember.",
-    details: "We dissect your raw material—notes, ramblings, previous decks—and distill it into a singular, undeniable thesis. No jargon. No fluff. Just the core truth of what you need to say."
+    details: "Bring your notes, pitch or presentation. We identify your audience, your purpose and the main point you need to communicate."
   },
   {
     number: "02",
     title: "Build the shape",
     copy: "We structure language, rhythm, and visuals around the way people actually listen.",
-    details: "Great ideas die in dense paragraphs. We pace your delivery, map out the emotional arcs, and build visual anchors so your audience stays with you from the first breath to the final pause."
+    details: "Build a clear opening, arrange your key points and finish with a specific next step. Practise pace, pauses and emphasis to make the message easier to follow."
   },
   {
     number: "03",
     title: "Make it yours",
     copy: "We rehearse until the message feels less performed and more like you on your best day.",
-    details: "This isn't about memorizing a script. We pressure-test your delivery in a studio setting, stripping away the 'speaker voice' and adjusting the rhythm until the words feel completely natural."
+    details: "Rehearse aloud, receive specific feedback and try again. Work on delivery and questions using situations you actually face."
   }
 ];
 
@@ -56,7 +56,7 @@ export function MethodSection() {
             </h2>
             
             <p className="mt-8 max-w-[360px] text-balance font-sans text-[16px] leading-relaxed text-[var(--muted)]">
-              Clear thinking gets more useful when it has a repeatable way to become clear language.
+              Each session turns a real speaking challenge into a message you can practise and improve.
             </p>
           </Reveal>
         </div>

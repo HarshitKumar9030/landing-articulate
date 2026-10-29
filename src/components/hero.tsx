@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { MotionValue, Transition } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Play, X } from "lucide-react";
+import { APP_CONTENT } from "@/constants";
 import { MacbookScroll } from "@/components/ui/macbook";
 import { CloudShader } from "./cloud-shader";
 import { PlaneGame } from "./plane-game";
@@ -202,7 +203,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ delay: 0.1, duration: 0.8 }}
           >
-            Speak with clarity. Lead with presence.
+            {APP_CONTENT.hero.intro}
           </motion.p>
 
           <motion.h1
@@ -223,7 +224,7 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
             className="mt-6 max-w-[500px] text-balance font-sans text-[15px] leading-relaxed text-[var(--muted)] md:mt-8 md:text-[17px]"
           >
-            ArticulateX is a professional speaking studio tailored for leaders with something meaningful to say.
+            {APP_CONTENT.hero.description}
           </motion.p>
         </div>
 

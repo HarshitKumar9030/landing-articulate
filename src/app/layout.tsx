@@ -11,7 +11,7 @@ import { ConnectivityWrapper } from "@/components/connectivity-wrapper";
 
 const siteUrl = new URL("https://articulatex.in");
 const siteTitle = "ArticulateX";
-const siteDescription = "ArticulateX is a communication studio for leaders, founders, and teams who want their message to land with clarity and presence.";
+const siteDescription = "Public speaking courses, individual coaching and team workshops for leaders, founders and professionals. Based in Mumbai. Start with a free one-day demo class.";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const mono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-inter" });

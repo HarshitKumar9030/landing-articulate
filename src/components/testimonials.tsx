@@ -33,7 +33,7 @@ export function Testimonials() {
             </div>
             
             <p className="max-w-xs text-balance font-sans text-[16px] leading-relaxed text-[color:color-mix(in_srgb,var(--ink)_60%,transparent)] lg:mb-3">
-              A few reflections from people who chose to make their thinking easier to hear.
+              Choose a real situation. Rehearse your message, receive feedback and practise again.
             </p>
           </div>
         </Reveal>
