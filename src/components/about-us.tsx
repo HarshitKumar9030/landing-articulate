@@ -16,20 +16,6 @@ type TeamMemberData = {
 
 const team: TeamMemberData[] = [
   {
-    name: "Vineet",
-    role: "Founder",
-    linkedin: "https://www.linkedin.com/",
-    instagram: "https://www.instagram.com/",
-    story: "Vineet built ArticulateX on the premise that great leadership requires equally great articulation. With a background in strategic communication, he strips away corporate noise to help founders turn raw vision into compelling, high-stakes narratives.",
-  },
-  {
-    name: "Aniket",
-    role: "Founder",
-    linkedin: "https://www.linkedin.com/",
-    instagram: "https://www.instagram.com/",
-    story: "Aniket operates at the precise intersection of business strategy and human psychology. He engineers messages that do more than just sound good—they are meticulously designed to demand attention, shift perspectives, and drive immediate action.",
-  },
-  {
     name: "Harshit",
     role: "Creative Director",
     linkedin: "https://www.linkedin.com/",
