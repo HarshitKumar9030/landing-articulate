@@ -13,8 +13,8 @@ export function GlobalReach() {
       <div className="mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-2 lg:gap-20">
         <div className="relative z-10">
           <p className="mb-6 font-mono text-[11px] uppercase tracking-[.18em] text-[var(--muted)]">Mumbai · Worldwide</p>
-          <h2 id="global-reach-heading" className="max-w-xl text-balance text-[clamp(40px,5vw,72px)] font-semibold leading-[.98] tracking-tighter text-[var(--ink)]">Your ideas deserve<br /><span className="text-[var(--muted)]">a wider audience.</span></h2>
-          <p className="mt-7 max-w-md text-[16px] leading-relaxed text-[var(--muted)]">A pitch across the table. A presentation across time zones. Practise speaking clearly and connecting with the people listening.</p>
+          <h2 id="global-reach-heading" className="max-w-xl font-sans text-balance text-[clamp(40px,5vw,72px)] font-semibold leading-[.98] tracking-tighter text-[var(--ink)]">Your ideas deserve<br /><span className="text-[var(--muted)]">a wider audience.</span></h2>
+          <p className="mt-7 max-w-md font-sans text-[16px] leading-relaxed text-[var(--muted)]">A pitch across the table. A presentation across time zones. Practise speaking clearly and connecting with the people listening.</p>
           <a href="#courses" className="mt-8 inline-flex items-center gap-3 text-[14px] font-medium text-[var(--ink)] transition-transform hover:translate-x-1">Find your course <span aria-hidden="true">↗</span></a>
         </div>
         <div aria-hidden="true" className="pointer-events-none relative mx-auto aspect-square w-full max-w-[460px]">
