@@ -212,9 +212,9 @@ export function Hero({ orbit, dark = false }: HeroProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            Make your message{" "}
+            {APP_CONTENT.hero.headlineLead}{" "}
             <span className="relative inline-block whitespace-nowrap">
-              land.
+              {APP_CONTENT.hero.headlineAccent}
             </span>
           </motion.h1>
 
@@ -236,10 +236,10 @@ export function Hero({ orbit, dark = false }: HeroProps) {
           className="relative z-10 mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row md:mt-10 md:gap-4"
         >
           <a
-            href="#about"
+            href="#courses"
             className="group flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-8 font-sans text-[14px] font-medium text-[var(--bg)] no-underline transition-all hover:scale-[1.02] active:scale-[0.98] sm:w-auto"
           >
-            Explore Method
+            {APP_CONTENT.hero.exploreMethod}
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </a>
 

@@ -2,6 +2,8 @@
 
 ArticulateX offers public speaking courses, individual coaching and team workshops for leaders, founders and professionals. The landing page should explain the service before asking visitors to explore it.
 
+The first viewport names the service in its main headline: “Public speaking coaching.” The eyebrow lists courses, individual coaching and team workshops, followed by the audience and session format. The primary hero link leads to courses.
+
 The main message is: bring a real pitch, presentation or speaking challenge, practise it, receive feedback and improve delivery. The entry offer is the existing free one-day demo class. Course formats and availability should be confirmed in the inquiry rather than presenting unverified durations.
 
 The existing sections, typography, colours, animation and layout are preserved. Illustrative testimonials have been replaced with practice scenarios, so the page does not imply they are verified customer endorsements.
