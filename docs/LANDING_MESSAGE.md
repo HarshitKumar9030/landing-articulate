@@ -31,3 +31,7 @@ The copied components are adapted for the existing palette, React 19 ref types a
 ## Globe sizing
 
 The globe stays inside a square responsive frame. React Three Fiber owns renderer sizing and the perspective camera aspect ratio. Do not reintroduce a fixed camera aspect or manual renderer setSize calls: these distorted the sphere after theme-triggered rerenders. Camera and fog objects are no longer reconstructed during rendering.
+
+## Visual consistency
+
+The global reach section follows Focus Areas and Method: the same horizontal gutters and vertical spacing, rounded eyebrow label, large sans-serif heading with muted accent text, restrained body width, soft 3% ink surface, 2rem stage corners and pill CTA. Technical coordinates and the extra numbered outcome row were removed. The responsive square globe frame and renderer-managed camera aspect are retained.
